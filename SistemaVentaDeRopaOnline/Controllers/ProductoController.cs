@@ -17,5 +17,25 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> Listado(string? genero)
+        {
+            var productos = await GetAllProducts(genero);
+            ViewBag.genero = genero;
+            return View(productos);
+        }
+        private async Task<List<Producto>> GetAllProducts(string? genero)
+        {
+            var query = context.Productos
+                    .Include(p => p.ImagenProductos)
+                    .AsQueryable();
+
+            if (!genero.IsNullOrEmpty())
+            {
+                query = query.Where(p => p.Genero == genero)
+                             .Include(p => p.Categoria);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

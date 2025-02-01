@@ -1,0 +1,38 @@
+.producto-item {
+    border: 1px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.producto-item:hover {
+    border-color: black;
+}
+
+.imagen-container {
+    height: 350px;
+    max-height: 350px;
+    overflow: hidden;
+    position: relative;
+}
+
+.imagen-container > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+}
+
+.imagen-container > img.second {
+    opacity: 0;
+}
+
+.imagen-container > img.second:hover {
+    opacity: 1;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}

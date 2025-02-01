@@ -1,0 +1,35 @@
+﻿@model List<SistemaVentaDeRopaOnline.Models.Producto>
+
+@{
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/listado-productos-cliente.css" asp-append-version="true" />
+
+<div class="container">
+    <h2 class="ms-0 p-0">Ropa · @ViewBag.genero</h2>
+
+    <div class="grid-container">
+        @foreach (var producto in Model)
+        {
+            <a asp-action="Detalle" asp-route-id="@producto.Id" class="producto-item text-decoration-none text-black p-0">
+                <div class="imagen-container mb-2">
+                    <img src="@producto.ImagenProductos.First().Url"
+                         class="object-fit-cover"
+                         alt="@producto.Nombre" />
+                    @if (producto.ImagenProductos.Count > 1)
+                    {
+                        <img src="@producto.ImagenProductos.ElementAt(1).Url"
+                             class="second"
+                             alt="@producto.Nombre" />
+                    }
+                </div>
+                <div class="d-flex flex-column px-2">
+                    <p class="fw-bold">S/. @producto.Precio.ToString("F2")</p>
+                    <h5 class="fs-5">@producto.Nombre.Substring(0, 20)...</h5>
+                    <p class="fw-medium opacity-50">@producto.Categoria.Nombre</p>
+                </div>
+            </a>
+        }
+    </div>
+</div>
