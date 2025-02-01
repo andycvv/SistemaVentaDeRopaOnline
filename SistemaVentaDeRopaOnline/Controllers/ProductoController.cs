@@ -36,12 +36,12 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             var query = context.Productos
                     .Include(p => p.ImagenProductos)
+                    .Include(p => p.Categoria)
                     .AsQueryable();
 
             if (!genero.IsNullOrEmpty())
             {
-                query = query.Where(p => p.Genero == genero)
-                             .Include(p => p.Categoria);
+                query = query.Where(p => p.Genero == genero);
             }
 
             return await query.ToListAsync();
