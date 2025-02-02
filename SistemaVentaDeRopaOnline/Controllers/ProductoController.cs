@@ -13,11 +13,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             this.context = context;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public async Task<IActionResult> Listado(string? genero)
+        public async Task<IActionResult> Index(string? genero)
         {
             var productos = await GetAllProducts(genero);
             ViewBag.genero = genero;
