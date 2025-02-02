@@ -1,0 +1,27 @@
+.imagenes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.squares-container {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.squares-container > div, .talla-text {
+    min-width: 50px;
+    min-height: 50px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: black;
+    transition: opacity 0.1s ease-in;
+}
+
+.squares-container > div:hover, a:hover {
+    opacity: .6;
+}

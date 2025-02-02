@@ -1,0 +1,80 @@
+﻿@model SistemaVentaDeRopaOnline.Models.Producto
+
+@{
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/detalle-producto-cliente.css" asp-append-version="true" />
+
+<div class="row mx-auto gap-5 container">
+    <div class="imagenes-container row col-12 col-lg-8">
+        @foreach (var imagen in Model.ImagenProductos)
+        {
+                <div class="w-100 h-100">
+                    <img src="@imagen.Url" alt="@Model.Nombre" class="w-100 h-100 object-fit-cover" />
+                </div>
+        }
+    </div>
+
+    <div class="row flex-column col-12 col-lg-4">
+        <header>
+            <h2>@Model.Nombre</h2>
+            <p>@Model.Marca</p>
+            <p class="fw-bold">S/. @Model.Precio.ToString("F2")</p>
+        </header>
+        <form id="formAgregarCarrito" class="mb-3" method="post" action="/Pedido/Guardar">
+            <h3 class="fs-5 fw-lighter">Selecciona tu talla</h3>
+            <div class="squares-container mb-3">
+                @foreach (var talla in Model.Inventarios.Select(i => i.Talla).Distinct())
+                {
+                    var isSelected = ViewBag.IdeTal != null && talla.Id == ViewBag.IdeTal;
+                        <a asp-action="Detalle"
+                           asp-route-id="@Model.Id"
+                           asp-route-ideTal="@talla.Id"
+                           class="talla-text border border-secondary rounded-2 text-decoration-none @((isSelected ? "bg-primary text-white" : ""))">
+                        @talla.Nombre
+                        </a>
+                }
+            </div>
+            <h3 class="fs-5 fw-lighter">Selecciona el color</h3>
+            <div class="squares-container mb-3">
+                @if (ViewBag.IdeTal == null)
+                {
+                    @foreach (var color in Model.Inventarios.Select(i => i.Color).Distinct())
+                    {
+                                <div class="border border-secondary rounded-2">
+                                    <input type="radio" name="ideCol" value="@color.Id" id="color-@color.Nombre" />
+                                    <label class="ms-1" for="color-@color.Nombre">@color.Nombre</label>
+                                </div>
+                    }
+                }
+                else
+                {
+                    @foreach (var color in Model.Inventarios.Where(i => i.TallaId == ViewBag.IdeTal).Select(i => i.Color).Distinct())
+                    {
+                                <div class="border border-secondary rounded-2">
+                                    <input type="radio" name="ideCol" value="@color.Id" id="color-@color.Nombre" />
+                                    <label class="ms-1" for="color-@color.Nombre">@color.Nombre</label>
+                                </div>
+                    }
+                }
+            </div>
+
+            <!--Campos ocultos (IdePro, PrePro, IdeTal)-->
+            <input type="hidden" name="productoId" value="@Model.Id" />
+            <input type="hidden" name="precio" value="@Model.Precio" />
+            <input type="hidden" name="ideTal" value="@ViewBag.IdeTal" />
+
+            @if (TempData["Error"] != null)
+            {
+                    <div class="alert alert-primary" role="alert">
+                    @TempData["Error"]
+                    </div>
+            }
+            <button class="w-100 btn btn-secondary">Agregar al Carrito</button>
+        </form>
+        <footer>
+            <p>@Model.Descripcion</p>
+        </footer>
+    </div>
+</div>
