@@ -28,7 +28,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Talla}/{action=Listar}/{id?}")
+    pattern: "{controller=Talla}/{action=Crear}/{id?}")
     .WithStaticAssets();
 
 
