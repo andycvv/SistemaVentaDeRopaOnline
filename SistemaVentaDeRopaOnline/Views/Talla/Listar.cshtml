@@ -10,7 +10,7 @@
         <h6>Gestiona tus tallas</h6>
     </div>
     <div class="page-btn">
-        <a href="addproduct.html" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img" class="me-1">Agregar Nueva Talla</a>
+        <a asp-action="Crear" asp-controller="Talla" class="btn btn-added"><img src="~/assets/img/icons/plus.svg" alt="img" class="me-1">Agregar Nueva Talla</a>
     </div>
 </div>
 
@@ -19,7 +19,7 @@
         <div class="table-top">
             <div class="search-set">
                 <div class="search-input">
-                    <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+                    <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img"></a>
                 </div>
             </div>
         </div>
@@ -41,10 +41,10 @@
                             <td>@talla.Nombre</td>
                             <td>
                                 <a class="me-3" href="editproduct.html">
-                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                    <img src="~/assets/img/icons/edit.svg" alt="img">
                                 </a>
                                 <a class="confirm-text" href="javascript:void(0);">
-                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                    <img src="~/assets/img/icons/delete.svg" alt="img">
                                 </a>
                             </td>
                         </tr>
