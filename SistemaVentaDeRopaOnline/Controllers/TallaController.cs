@@ -36,5 +36,24 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return View(talla);
         }
+
+        public async Task<IActionResult> Editar(int id) 
+        {
+            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(x => x.Id == id);
+            return View(talla);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(int id, [Bind("Id, Nombre")] Talla talla)
+        {
+            if (ModelState.IsValid) 
+            {
+                _sistemaContext.Tallas.Update(talla);
+                await _sistemaContext.SaveChangesAsync();
+                return RedirectToAction("Listar");
+            }
+
+            return View(talla);
+        }
     }
 }
