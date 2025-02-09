@@ -44,7 +44,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar(int id, [Bind("Id, Nombre")] Talla talla)
+        public async Task<IActionResult> Editar(int id, [Bind("Id, Nombre, Estado")] Talla talla)
         {
             if (ModelState.IsValid) 
             {
@@ -54,6 +54,26 @@ namespace SistemaVentaDeRopaOnline.Controllers
             }
 
             return View(talla);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Eliminar(int id) 
+        {
+            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(x => x.Id == id);
+
+            try
+            {
+                _sistemaContext.Tallas.Remove(talla);
+                await _sistemaContext.SaveChangesAsync();
+                TempData["AlertType"] = "success";
+            }
+            catch 
+            {
+                TempData["AlertMessage"] = "No se puede eliminar esta talla, porque esta siendo utilizada en el inventario";
+                TempData["AlertType"] = "error";
+            }
+           
+            return RedirectToAction("Listar");
         }
     }
 }
