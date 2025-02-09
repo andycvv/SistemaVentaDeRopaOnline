@@ -2,6 +2,7 @@
 @{
     ViewData["title"] = "Listar";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    
 }
 
 <div class="page-header">
@@ -30,6 +31,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -39,11 +41,12 @@
                         <tr>
                             <td>@talla.Id</td>
                             <td>@talla.Nombre</td>
+                            <td>@(talla.Estado == true ? "Activado" : "Desactivado")</td>
                             <td>
                                 <a class="me-3" asp-action="Editar" asp-route-id="@talla.Id">
                                     <img src="~/assets/img/icons/edit.svg" alt="img">
                                 </a>
-                                <a class="confirm-text" href="javascript:void(0);">
+                                <a class="confirm-text" onclick="confirmDelete(@talla.Id)">
                                     <img src="~/assets/img/icons/delete.svg" alt="img">
                                 </a>
                             </td>
@@ -54,4 +57,34 @@
         </div>
     </div>
 </div>
-        
+
+@if (TempData["AlertMessage"] != null) 
+{ 
+    <script>
+
+    </script>
+}
+
+<script>
+    function confirmDelete(id){
+        showConfirmDeleteAlert(() => {
+            window.location.href = "/Talla/Eliminar/" + id
+        })
+    }
+
+    function errorAlert(mensaje)
+    {
+        showErrorAlert(mensaje);
+    }
+
+    var alertMessage = 'TempData["AlertMessage"]';
+    var alertType = 'TempData["AlertType"]';
+
+    if (alertMessage != null) 
+    {
+        if (alertType === "error")
+        {
+            errorAlert(alertMessage);
+        }
+    }
+</script>
