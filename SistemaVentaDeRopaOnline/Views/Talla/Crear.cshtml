@@ -19,6 +19,7 @@
                     <div class="form-group">
                         <label for="Nombre">Nombre</label>
                         <input type="text" asp-for="Nombre">
+                        @Html.ValidationMessageFor(x => x.Nombre, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="col-lg-12">
