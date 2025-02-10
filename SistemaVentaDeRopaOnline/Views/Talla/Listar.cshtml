@@ -46,7 +46,7 @@
                                 <a class="me-3" asp-action="Editar" asp-route-id="@talla.Id">
                                     <img src="~/assets/img/icons/edit.svg" alt="img">
                                 </a>
-                                <a class="confirm-text" onclick="confirmDelete(@talla.Id)">
+                                <a class="confirm-text" onclick="showConfirmDeleteAlert('Talla', 'Eliminar', @talla.Id)">
                                     <img src="~/assets/img/icons/delete.svg" alt="img">
                                 </a>
                             </td>
@@ -57,34 +57,3 @@
         </div>
     </div>
 </div>
-
-@if (TempData["AlertMessage"] != null) 
-{ 
-    <script>
-
-    </script>
-}
-
-<script>
-    function confirmDelete(id){
-        showConfirmDeleteAlert(() => {
-            window.location.href = "/Talla/Eliminar/" + id
-        })
-    }
-
-    function errorAlert(mensaje)
-    {
-        showErrorAlert(mensaje);
-    }
-
-    var alertMessage = 'TempData["AlertMessage"]';
-    var alertType = 'TempData["AlertType"]';
-
-    if (alertMessage != null) 
-    {
-        if (alertType === "error")
-        {
-            errorAlert(alertMessage);
-        }
-    }
-</script>

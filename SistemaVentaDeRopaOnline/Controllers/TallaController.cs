@@ -29,8 +29,18 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             if (ModelState.IsValid) 
             {
-                _sistemaContext.Tallas.Add(talla);
-                await _sistemaContext.SaveChangesAsync();
+                var duplicado = await _sistemaContext.Tallas.FirstOrDefaultAsync(t => t.Nombre == talla.Nombre);
+                if (duplicado == null)
+                {
+                    _sistemaContext.Tallas.Add(talla);
+                    await _sistemaContext.SaveChangesAsync();
+                    CrearAlerta("success", "Se registró la talla correctamente");
+                }
+                else 
+                {
+                    CrearAlerta("error", "La talla ya existe");
+                }
+
                 return RedirectToAction("Listar");
             }
 
@@ -50,6 +60,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             {
                 _sistemaContext.Tallas.Update(talla);
                 await _sistemaContext.SaveChangesAsync();
+                CrearAlerta("success", "Se editó la talla correctamente");
                 return RedirectToAction("Listar");
             }
 
@@ -65,15 +76,20 @@ namespace SistemaVentaDeRopaOnline.Controllers
             {
                 _sistemaContext.Tallas.Remove(talla);
                 await _sistemaContext.SaveChangesAsync();
-                TempData["AlertType"] = "success";
+                CrearAlerta("success", "Se elimino la talla correctamente");
             }
             catch 
             {
-                TempData["AlertMessage"] = "No se puede eliminar esta talla, porque esta siendo utilizada en el inventario";
-                TempData["AlertType"] = "error";
+                CrearAlerta("error", "No se puede eliminar la talla, porque está siendo utilizada en el inventario");
             }
            
             return RedirectToAction("Listar");
         }
+
+        public void CrearAlerta(string alertType, string alertMessage) 
+        {
+            TempData["AlertMessage"] = alertMessage;
+            TempData["AlertType"] = alertType;
+        } 
     }
 }

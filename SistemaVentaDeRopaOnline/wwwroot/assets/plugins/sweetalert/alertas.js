@@ -1,13 +1,15 @@
 function showSuccessAlert(mensaje)
 {
     Swal.fire({
-        title: mensaje,
+        position: "top-end",
         icon: "success",
-        draggable: true
+        title: mensaje,
+        showConfirmButton: false,
+        timer: 2000
     });
 }
 
-function showConfirmDeleteAlert(callback)
+function showConfirmDeleteAlert(controller, action, id = "")
 {
     Swal.fire({
         title: "Are you sure?",
@@ -19,7 +21,7 @@ function showConfirmDeleteAlert(callback)
         confirmButtonText: "Yes, delete it!"
     }).then((result) => {
         if (result.isConfirmed) {
-            callback()
+            window.location.href = "/" + controller + "/" + action + "/" + id;
         }
     });
 }
