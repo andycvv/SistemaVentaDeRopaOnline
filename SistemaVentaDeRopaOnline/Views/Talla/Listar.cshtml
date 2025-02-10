@@ -2,7 +2,7 @@
 @{
     ViewData["title"] = "Listar";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    
+
 }
 
 <div class="page-header">
@@ -43,6 +43,16 @@
                             <td>@talla.Nombre</td>
                             <td>@(talla.Estado == true ? "Activado" : "Desactivado")</td>
                             <td>
+                                <a class="me-3" asp-action="Estado" asp-route-id="@talla.Id">
+                                    @if (talla.Estado)
+                                    {
+                                        <i class="fs-4 bi bi-toggle-on"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fs-4 bi bi-toggle-off"></i>
+                                    }
+                                </a>
                                 <a class="me-3" asp-action="Editar" asp-route-id="@talla.Id">
                                     <img src="~/assets/img/icons/edit.svg" alt="img">
                                 </a>
