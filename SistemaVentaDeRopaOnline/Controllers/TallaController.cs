@@ -58,7 +58,8 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var duplicado = await _sistemaContext.Tallas.FirstOrDefaultAsync(t => t.Nombre == talla.Nombre);
+                var duplicado = await _sistemaContext.Tallas
+                    .FirstOrDefaultAsync(t => t.Nombre == talla.Nombre && t.Id != talla.Id);
                 if (duplicado == null)
                 {
                     _sistemaContext.Tallas.Update(talla);
