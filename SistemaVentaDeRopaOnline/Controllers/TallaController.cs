@@ -58,9 +58,18 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             if (ModelState.IsValid) 
             {
-                _sistemaContext.Tallas.Update(talla);
-                await _sistemaContext.SaveChangesAsync();
-                CrearAlerta("success", "Se editó la talla correctamente");
+                var duplicado = await _sistemaContext.Tallas.FirstOrDefaultAsync(t => t.Nombre == talla.Nombre);
+                if (duplicado == null)
+                {
+                    _sistemaContext.Tallas.Update(talla);
+                    await _sistemaContext.SaveChangesAsync();
+                    CrearAlerta("success", "Se editó la talla correctamente");
+                }
+                else 
+                {
+                    CrearAlerta("error", "La talla ya existe");
+                }
+                
                 return RedirectToAction("Listar");
             }
 
