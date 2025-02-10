@@ -16,5 +16,6 @@ namespace SistemaVentaDeRopaOnline.Data
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Venta> Ventas { get; set; }
+        public DbSet<Talla> Tallas { get; set; }
     }
 }

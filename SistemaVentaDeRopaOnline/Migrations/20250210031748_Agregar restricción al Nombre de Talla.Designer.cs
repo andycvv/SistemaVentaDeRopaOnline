@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaVentaDeRopaOnline.Data;
 
@@ -11,9 +12,11 @@ using SistemaVentaDeRopaOnline.Data;
 namespace SistemaVentaDeRopaOnline.Migrations
 {
     [DbContext(typeof(SistemaContext))]
-    partial class SistemaContextModelSnapshot : ModelSnapshot
+    [Migration("20250210031748_Agregar restricción al Nombre de Talla")]
+    partial class AgregarrestricciónalNombredeTalla
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

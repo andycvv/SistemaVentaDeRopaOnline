@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -67,7 +67,7 @@
                                     <h5>Admin</h5>
                                 </div>
                             </div>
-                            <a class="dropdown-item logout pb-0" asp-action="Login" asp-controller="Seguridad"><img src="assets/img/icons/log-out.svg" class="me-2" alt="img">Cerrar Sesión</a>
+                            <a class="dropdown-item logout pb-0" asp-action="Login" asp-controller="Seguridad"><img src="~/assets/img/icons/log-out.svg" class="me-2" alt="img">Cerrar Sesión</a>
                         </div>
                     </div>
                 </li>
@@ -99,7 +99,7 @@
                             </ul>
                         </li>
                         <li class="submenu">
-                            <a href="javascript:void(0);"><img src="assets/img/icons/product.svg" alt="img"><span> Talla</span> <span class="menu-arrow"></span></a>
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/product.svg" alt="img"><span> Talla</span> <span class="menu-arrow"></span></a>
                             <ul>
                                 <li><a asp-action="Listar" asp-controller="Talla">Listado</a></li>
                                 <li><a asp-action="Crear" asp-controller="Talla">Registro</a></li>
@@ -131,10 +131,26 @@
 
     <script src="~/assets/plugins/select2/js/select2.min.js"></script>
 
-    <script src="~/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
-    <script src="~/assets/plugins/sweetalert/sweetalerts.min.js"></script>
+    <script src="~/assets/plugins/sweetalert/alertas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="~/assets/js/script.js"></script>
+    <script>
+        var alertMessage = "@TempData["AlertMessage"]";
+        var alertType = "@TempData["AlertType"]";
+
+        if (alertMessage != null)
+        {
+            if (alertType === "error")
+            {
+                showErrorAlert(alertMessage);
+            }
+            else if(alertType === "success")
+            {
+                showSuccessAlert(alertMessage);
+            }
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
