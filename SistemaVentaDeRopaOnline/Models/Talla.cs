@@ -16,6 +16,5 @@ public class Talla
     public string Nombre { get; set; } = null!;
     public bool Estado { get; set; } = true;
 
-    public List<DetallePedido> DetallePedidos { get; set; } = new List<DetallePedido>();
     public List<Inventario> Inventarios { get; set; } = new List<Inventario>();
 }

@@ -19,9 +19,9 @@ public class Producto
     [StringLength(30)]
     public string Marca { get; set; } = null!;
     public DateTime FechaCreacion { get; set; }
+    public bool Estado { get; set; } = true;
     public int CategoriaId { get; set; }
     public Categoria Categoria { get; set; } = null!;
-    public List<DetallePedido> DetallePedidos { get; set; } = new List<DetallePedido>();
     public List<Imagen> ImagenProductos { get; set; } = new List<Imagen>();
     public List<Inventario> Inventarios { get; set; } = new List<Inventario>();
 }

@@ -11,5 +11,6 @@ public class Categoria
     public int Id { get; set; }
     [StringLength(30)]
     public string Nombre { get; set; } = null!;
+    public bool Estado { get; set; } = true;
     public List<Producto> Productos { get; set; } = new List<Producto>();
 }

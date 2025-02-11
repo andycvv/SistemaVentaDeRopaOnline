@@ -13,6 +13,6 @@ public class Color
     public string Nombre { get; set; } = null!;
     [StringLength(7)]
     public string Codigo { get; set; } = null!;
-    public List<DetallePedido> DetallePedidos { get; set; } = new List<DetallePedido>();
+    public bool Estado { get; set; } = true;
     public List<Inventario> Inventarios { get; set; } = new List<Inventario>();
 }

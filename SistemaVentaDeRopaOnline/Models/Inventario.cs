@@ -15,4 +15,5 @@ public class Inventario
     public Color Color { get; set; } = null!;
     public Producto Producto { get; set; } = null!;
     public Talla Talla { get; set; } = null!;
+    public List<DetallePedido> DetallePedidos { get; set; } = new List<DetallePedido>();
 }
