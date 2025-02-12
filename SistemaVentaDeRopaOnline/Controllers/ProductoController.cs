@@ -61,5 +61,12 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<IActionResult> Listar()
+        {
+            var productos = await GetAllProducts(null);
+            return View(productos);
+        }
+
     }
 }
