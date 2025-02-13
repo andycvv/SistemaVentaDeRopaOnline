@@ -10,6 +10,6 @@ namespace SistemaVentaDeRopaOnline.Models;
 public class Usuario : IdentityUser
 {
     [StringLength(30)]
-    public string Nombre { get; set; } = null!;
+    public string? Nombre { get; set; }
     public List<Pedido> Pedidos { get; set; } = new List<Pedido>();
 }
