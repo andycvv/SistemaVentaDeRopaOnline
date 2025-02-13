@@ -49,7 +49,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
         public async Task<IActionResult> Estado(int id)
         {
-            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(x => x.Id == id);
+            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(t => t.Id == id);
             talla.Estado = !talla.Estado;
             await _sistemaContext.SaveChangesAsync();
             CrearAlerta("success", "Se actualizó el estado correctamente");
@@ -59,7 +59,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
         public async Task<IActionResult> Editar(int id) 
         {
-            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(x => x.Id == id);
+            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(t => t.Id == id);
             return View(talla);
         }
 
@@ -90,7 +90,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         [HttpGet]
         public async Task<IActionResult> Eliminar(int id) 
         {
-            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(x => x.Id == id);
+            var talla = await _sistemaContext.Tallas.FirstOrDefaultAsync(t => t.Id == id);
 
             try
             {
