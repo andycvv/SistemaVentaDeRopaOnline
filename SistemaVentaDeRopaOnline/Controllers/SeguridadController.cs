@@ -22,5 +22,44 @@ namespace SistemaVentaDeRopaOnline.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
+
+
+        [HttpGet]
+        public IActionResult Registrar()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Registrar(RegistroViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var usuario = new Usuario()
+                {
+                    UserName = model.Correo,
+                    Email = model.Correo,
+                    Nombre = model.Nombre
+                };
+
+                var resultado = await _userManager.CreateAsync(usuario, model.Password);
+
+                Console.WriteLine(resultado);
+
+                if (resultado.Succeeded)
+                {
+                    // Asignar el rol "Cliente" por defecto
+                    await _userManager.AddToRoleAsync(usuario, "Cliente");
+
+                    await _signInManager.SignInAsync(usuario, isPersistent: false);
+                    return RedirectToAction("Index", "Producto");
+                }
+
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
+        }
     }
 }

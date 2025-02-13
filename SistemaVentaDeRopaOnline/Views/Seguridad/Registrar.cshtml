@@ -1,0 +1,63 @@
+﻿@model SistemaVentaDeRopaOnline.Models.ViewModels.RegistroViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutSeguridad.cshtml";
+}
+
+<div class="main-wrapper">
+    <div class="account-content">
+        <div class="login-wrapper">
+            <div class="login-content">
+                <form asp-action="Registrar" class="login-userset">
+                    <div class="login-logo">
+                        <h1 class="fs-2 fw-bold">FASHION</h1>
+                    </div>
+                    <div class="login-userheading">
+                        <h3>Crea una cuenta</h3>
+                        <h4>Accede creando tu cuenta</h4>
+                    </div>
+                    <div class="form-login">
+                        <label>Nombre completo</label>
+                        <div class="form-addons">
+                            <input asp-for="Nombre" type="text" placeholder="Ingresa tu nombre completo">
+                        </div>
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-login">
+                        <label>Correo electrónico</label>
+                        <div class="form-addons">
+                            <input asp-for="Correo" type="text" placeholder="Ingrese su correo electrónico">
+                        </div>
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                    <div class="form-login">
+                        <label>Contraseña</label>
+                        <div class="pass-group">
+                            <input asp-for="Password" type="password" class="pass-input" placeholder="Ingrese su contraseña">
+                            <span class="fas toggle-password fa-eye-slash"></span>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-login">
+                        <label>Repite tu contraseña</label>
+                        <div class="pass-group">
+                            <input asp-for="ConfirmarPassword" type="password" class="pass-input" placeholder="Repita su contraseña">
+                            <span class="fas toggle-password fa-eye-slash"></span>
+                        </div>
+                        <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-login">
+                        <button type="submit" class="btn btn-login">Registrarse</button>
+                    </div>
+                    <div class="signinform text-center">
+                        <h4>Ya tienes una cuenta? <a asp-action="Ingresar" class="hover-a">Ingresa</a></h4>
+                    </div>
+                </form>
+            </div>
+            <div class="login-img">
+                <img src="~/assets/img/login.jpg" alt="img">
+            </div>
+        </div>
+    </div>
+</div>
+    
