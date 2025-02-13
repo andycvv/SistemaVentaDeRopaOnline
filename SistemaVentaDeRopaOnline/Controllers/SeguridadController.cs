@@ -61,5 +61,26 @@ namespace SistemaVentaDeRopaOnline.Controllers
             }
             return View(model);
         }
+        [HttpGet]
+        public IActionResult Ingresar()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Ingresar(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var resultado = await _signInManager.PasswordSignInAsync(model.Correo, model.Password, model.Recordarme, false);
+
+                if (resultado.Succeeded)
+                {
+                    return RedirectToAction("Index", "Producto");
+                }
+
+                ModelState.AddModelError("", "Correo o contraseña incorrectos.");
+            }
+            return View(model);
+        }
     }
 }
