@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
+using SistemaVentaDeRopaOnline.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<SistemaContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"))
  );
+builder.Services.AddIdentity<Usuario, IdentityRole>()
+    .AddEntityFrameworkStores<SistemaContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
