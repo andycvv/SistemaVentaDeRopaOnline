@@ -112,6 +112,39 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return RedirectToAction("Listar");
         }
 
+        public async Task<IActionResult> Editar(int id)
+        {
+            var producto = await context.Productos.FirstOrDefaultAsync(p => p.Id == id);
+            var categorias = await context.Categorias.ToListAsync();
+            ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
+            return View(producto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(int id, [Bind("Id, Nombre, Precio, Genero, Descripcion, Marca, CategoriaId, Estado")] Producto producto)
+        {
+            if (ModelState.IsValid)
+            {
+                var duplicado = await context.Productos.FirstOrDefaultAsync(p => p.Nombre == producto.Nombre && p.Id != producto.Id);
+                if (duplicado == null)
+                {
+                    context.Productos.Update(producto);
+                    await context.SaveChangesAsync();
+                    CrearAlerta("success", "Se editó el producto correctamente");
+                }
+                else
+                {
+                    CrearAlerta("error", "El producto ya existe");
+                }
+
+                return RedirectToAction("Listar");
+            }
+            var categorias = await context.Categorias.ToListAsync();
+            ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
+
+            return View(producto);
+        }
+
         public void CrearAlerta(string alertType, string alertMessage)
         {
             TempData["AlertMessage"] = alertMessage;
