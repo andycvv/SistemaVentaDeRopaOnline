@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models;
@@ -68,5 +70,43 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(productos);
         }
 
+        public async Task<IActionResult> Crear()
+        {
+            var categorias = await context.Categorias.ToListAsync();
+            ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear([Bind("Id, Nombre, Precio, Genero, Descripcion, Marca, Estado, CategoriaId")] Producto producto)
+        {
+            if (ModelState.IsValid)
+            {
+                var duplicado = await context.Productos.FirstOrDefaultAsync(p => p.Nombre == producto.Nombre);
+                if (duplicado == null)
+                {
+                    context.Productos.Add(producto);
+                    await context.SaveChangesAsync();
+                    CrearAlerta("success", "Se registró el producto correctamente");
+                }
+                else
+                {
+                    CrearAlerta("error", "El producto ya existe");
+                }
+
+                return RedirectToAction("Listar");
+            }
+            var categorias = await context.Categorias.ToListAsync();
+            ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
+
+            return View(producto);
+        }
+
+
+        public void CrearAlerta(string alertType, string alertMessage)
+        {
+            TempData["AlertMessage"] = alertMessage;
+            TempData["AlertType"] = alertType;
+        }
     }
 }
