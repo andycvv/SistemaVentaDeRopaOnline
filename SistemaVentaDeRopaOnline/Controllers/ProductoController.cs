@@ -104,7 +104,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
         public async Task<IActionResult> Estado(int id)
         {
-            var producto = await context.Productos.FirstOrDefaultAsync(x => x.Id == id);
+            var producto = await context.Productos.FirstOrDefaultAsync(p => p.Id == id);
             producto.Estado = !producto.Estado;
             await context.SaveChangesAsync();
             CrearAlerta("success", "Se actualizó el estado correctamente");
