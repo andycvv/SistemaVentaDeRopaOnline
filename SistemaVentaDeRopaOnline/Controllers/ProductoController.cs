@@ -72,7 +72,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
         public async Task<IActionResult> Crear()
         {
-            var categorias = await context.Categorias.ToListAsync();
+            var categorias = await context.Categorias.Where(c => c.Estado).ToListAsync();
             ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
             return View();
         }
@@ -96,7 +96,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                 return RedirectToAction("Listar");
             }
-            var categorias = await context.Categorias.ToListAsync();
+            var categorias = await context.Categorias.Where(c => c.Estado).ToListAsync();
             ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
 
             return View(producto);
@@ -115,7 +115,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         public async Task<IActionResult> Editar(int id)
         {
             var producto = await context.Productos.FirstOrDefaultAsync(p => p.Id == id);
-            var categorias = await context.Categorias.ToListAsync();
+            var categorias = await context.Categorias.Where(c => c.Estado).ToListAsync();
             ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
             return View(producto);
         }
@@ -139,7 +139,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                 return RedirectToAction("Listar");
             }
-            var categorias = await context.Categorias.ToListAsync();
+            var categorias = await context.Categorias.Where(c => c.Estado).ToListAsync();
             ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre");
 
             return View(producto);
