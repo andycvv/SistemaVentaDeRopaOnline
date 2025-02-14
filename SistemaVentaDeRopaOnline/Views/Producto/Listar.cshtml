@@ -65,9 +65,12 @@
                                 <a class="me-3" asp-action="Editar" asp-route-id="@producto.Id">
                                     <img src="~/assets/img/icons/edit.svg" alt="img">
                                 </a>
-                                <a class="confirm-text" onclick="showConfirmDeleteAlert('Producto', 'Eliminar', @producto.Id)">
+                                <a class="me-3" onclick="showConfirmDeleteAlert('Producto', 'Eliminar', @producto.Id)">
                                     <img src="~/assets/img/icons/delete.svg" alt="img">
                                 </a>
+                                <button type="button" asp-action="Asignar" asp-controller="Imagen" asp-route-id="@producto.Id" style="border: 2px solid #637381; border-radius: 5px; background-color: white; color: #637381" onmouseover="this.style.backgroundColor='#637381'; this.style.color='white'; this.querySelector('i').style.color='white';" onmouseout="this.style.backgroundColor='white'; this.style.color='#637381'; this.querySelector('i').style.color='#637381';">
+                                    <i class="bi bi-images fw-bold" style="font-size: 21px; color: #637381"></i> Imagen
+                                </button>
                             </td>
                         </tr>
                     }
