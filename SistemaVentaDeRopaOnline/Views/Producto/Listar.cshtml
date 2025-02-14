@@ -44,7 +44,7 @@
                     {
                         <tr>
                             <td>@producto.Id</td>
-                            <td>@producto.Nombre</td>
+                            <td>@(producto.Nombre.Length > 20 ? producto.Nombre.Substring(0, 20) + "..." : producto.Nombre)</td>
                             <td>@producto.Precio</td>
                             <td>@producto.Genero</td>
                             <td>@producto.Marca</td>
