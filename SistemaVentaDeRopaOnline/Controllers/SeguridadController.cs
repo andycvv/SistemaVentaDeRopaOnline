@@ -43,20 +43,12 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                 var resultado = await _userManager.CreateAsync(usuario, model.Password);
 
-                Console.WriteLine(resultado);
-
                 if (resultado.Succeeded)
                 {
-                    // Asignar el rol "Cliente" por defecto
                     await _userManager.AddToRoleAsync(usuario, "Cliente");
 
                     await _signInManager.SignInAsync(usuario, isPersistent: false);
                     return RedirectToAction("Index", "Producto");
-                }
-
-                foreach (var error in resultado.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
                 }
             }
             return View(model);
@@ -75,12 +67,24 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                 if (resultado.Succeeded)
                 {
+                    CrearAlerta("success", "Sesión iniciada correctamente");
                     return RedirectToAction("Index", "Producto");
                 }
 
-                ModelState.AddModelError("", "Correo o contraseña incorrectos.");
+                CrearAlerta("error", "Correo o Clave incorrectos.");
             }
             return View(model);
         }
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Ingresar");
+        }
+
+        public void CrearAlerta(string alertType, string alertMessage) 
+        {
+            TempData["AlertMessage"] = alertMessage;
+            TempData["AlertType"] = alertType;
+        } 
     }
 }

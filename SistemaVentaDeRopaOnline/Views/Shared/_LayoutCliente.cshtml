@@ -53,7 +53,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
                                 <li><a class="dropdown-item" href="#">Iniciar sesión</a></li>
-                                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                                <li><a class="dropdown-item" asp-action="Logout" asp-controller="Seguridad">Cerrar sesión</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -148,6 +148,24 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/assets/plugins/sweetalert/alertas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var alertMessage = "@TempData["AlertMessage"]";
+        var alertType = "@TempData["AlertType"]";
+
+        if (alertMessage != null)
+        {
+            if (alertType === "error")
+            {
+                showErrorAlert(alertMessage);
+            }
+            else if(alertType === "success")
+            {
+                showSuccessAlert(alertMessage);
+            }
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
