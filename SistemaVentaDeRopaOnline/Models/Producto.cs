@@ -9,19 +9,23 @@ namespace SistemaVentaDeRopaOnline.Models;
 public class Producto
 {
     public int Id { get; set; }
-    [StringLength(100)]
+    [Required(ErrorMessage = "Ingrese el nombre del producto.")]
+    [StringLength(100, ErrorMessage = "El nombre no debe superar los 100 caracteres.")]
     public string Nombre { get; set; } = null!;
-    public double Precio { get; set; }
+    [Range(0.01, double.MaxValue, ErrorMessage = "Ingrese un precio válido mayor a 0.00.")]
+    public double Precio { get; set; } = 0.00;
     [StringLength(20)]
     public string Genero { get; set; } = null!;
-    [StringLength(255)]
+    [Required(ErrorMessage = "Ingrese la descripción del producto.")]
+    [StringLength(255, ErrorMessage = "La descripción no debe superar los 255 caracteres.")]
     public string Descripcion { get; set; } = null!;
-    [StringLength(30)]
+    [Required(ErrorMessage = "Ingrese la marca del producto.")]
+    [StringLength(30, ErrorMessage = "La marca no debe superar los 30 caracteres.")]
     public string Marca { get; set; } = null!;
-    public DateTime FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; } = DateTime.Now;
     public bool Estado { get; set; } = true;
     public int CategoriaId { get; set; }
-    public Categoria Categoria { get; set; } = null!;
+    public Categoria? Categoria { get; set; } 
     public List<Imagen> ImagenProductos { get; set; } = new List<Imagen>();
     public List<Inventario> Inventarios { get; set; } = new List<Inventario>();
 }
