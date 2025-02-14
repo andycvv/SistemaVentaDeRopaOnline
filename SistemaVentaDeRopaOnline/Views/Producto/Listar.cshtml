@@ -1,0 +1,78 @@
+﻿@model List<SistemaVentaDeRopaOnline.Models.Producto>
+@{
+    ViewData["title"] = "Listar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-title">
+        <h4>Lista de Productos</h4>
+        <h6>Gestiona tus productos</h6>
+    </div>
+    <div class="page-btn">
+        <a asp-action="Crear" asp-controller="Producto" class="btn btn-added"><img src="~/assets/img/icons/plus.svg" alt="img" class="me-1">Agregar Nuevo Producto</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-input">
+                    <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table  datanew">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Género</th>
+                        <th>Marca</th>
+                        <th>Categoría</th>
+                        <th>Fecha de Creación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var producto in Model)
+                    {
+                        <tr>
+                            <td>@producto.Id</td>
+                            <td>@(producto.Nombre.Length > 20 ? producto.Nombre.Substring(0, 20) + "..." : producto.Nombre)</td>
+                            <td>@producto.Precio</td>
+                            <td>@producto.Genero</td>
+                            <td>@producto.Marca</td>
+                            <td>@producto.Categoria?.Nombre</td>
+                            <td>@producto.FechaCreacion</td>
+                            <td>@(producto.Estado == true ? "Activado" : "Desactivado")</td>
+                            <td>
+                                <a class="me-3" asp-action="Estado" asp-route-id="@producto.Id">
+                                    @if (producto.Estado)
+                                    {
+                                        <i class="fs-4 bi bi-toggle-on"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fs-4 bi bi-toggle-off"></i>
+                                    }
+                                </a>
+                                <a class="me-3" asp-action="Editar" asp-route-id="@producto.Id">
+                                    <img src="~/assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a class="confirm-text" onclick="showConfirmDeleteAlert('Producto', 'Eliminar', @producto.Id)">
+                                    <img src="~/assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

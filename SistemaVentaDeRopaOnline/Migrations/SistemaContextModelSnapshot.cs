@@ -40,7 +40,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categorias");
+                    b.ToTable("Categorias", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Color", b =>
@@ -66,7 +66,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Colores");
+                    b.ToTable("Colores", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.DetallePedido", b =>
@@ -95,7 +95,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasIndex("PedidoId");
 
-                    b.ToTable("DetallePedidos");
+                    b.ToTable("DetallePedidos", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Imagen", b =>
@@ -118,7 +118,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasIndex("ProductoId");
 
-                    b.ToTable("Imagenes");
+                    b.ToTable("Imagenes", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Inventario", b =>
@@ -149,7 +149,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasIndex("TallaId");
 
-                    b.ToTable("Inventarios");
+                    b.ToTable("Inventarios", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Pedido", b =>
@@ -181,7 +181,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Pedidos");
+                    b.ToTable("Pedidos", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Producto", b =>
@@ -228,7 +228,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Talla", b =>
@@ -249,7 +249,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tallas");
+                    b.ToTable("Tallas", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Usuario", b =>
@@ -282,7 +282,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.Venta", b =>
@@ -309,7 +309,7 @@ namespace SistemaVentaDeRopaOnline.Migrations
                     b.HasIndex("PedidoId")
                         .IsUnique();
 
-                    b.ToTable("Ventas");
+                    b.ToTable("Ventas", (string)null);
                 });
 
             modelBuilder.Entity("SistemaVentaDeRopaOnline.Models.DetallePedido", b =>
