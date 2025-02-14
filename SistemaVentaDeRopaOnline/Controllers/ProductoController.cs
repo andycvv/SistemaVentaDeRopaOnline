@@ -145,6 +145,25 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(producto);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var producto = await context.Productos.FirstOrDefaultAsync(p => p.Id == id);
+
+            try
+            {
+                context.Productos.Remove(producto);
+                await context.SaveChangesAsync();
+                CrearAlerta("success", "Se elimino el producto correctamente");
+            }
+            catch 
+            {
+                CrearAlerta("error", "No se puede eliminar el producto, porque está siendo utilizado en el inventario");
+            }
+
+            return RedirectToAction("Listar");
+        }
+
         public void CrearAlerta(string alertType, string alertMessage)
         {
             TempData["AlertMessage"] = alertMessage;
