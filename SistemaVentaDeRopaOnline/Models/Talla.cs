@@ -11,7 +11,7 @@ public class Talla
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Ingrese el nombre de la talla.")]
-    [StringLength(30, ErrorMessage = "El nombre no debe superar los 30 caracteres.")]
+    [StringLength(10, ErrorMessage = "El nombre no debe superar los 10 caracteres.")]
     [RegularExpression(@"^[a-zA-Z0-9\s]+$", ErrorMessage = "El nombre solo puede contener letras, números y espacios.")]
     public string Nombre { get; set; } = null!;
     public bool Estado { get; set; } = true;
