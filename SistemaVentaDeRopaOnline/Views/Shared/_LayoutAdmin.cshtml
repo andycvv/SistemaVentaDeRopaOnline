@@ -64,11 +64,32 @@
                                     <span class="status online"></span>
                                 </span>
                                 <div class="profilesets">
-                                    <h6>John Doe</h6>
-                                    <h5>Admin</h5>
+                                    @{
+                                        string nombreUsuario = User.Identity?.IsAuthenticated == true ? User.Identity.Name : "John Doe";
+                                        string rolUsuario = "Cliente";
+
+                                        if (User.Identity?.IsAuthenticated == true)
+                                        {
+                                            if (User.IsInRole("Administrador"))
+                                            {
+                                                rolUsuario = "Administrador";
+                                            }
+                                            else if (User.IsInRole("Vendedor"))
+                                            {
+                                                rolUsuario = "Vendedor";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            rolUsuario = "Admin";
+                                        }
+                                    }
+
+                                    <h6>@nombreUsuario</h6>
+                                    <h5>@rolUsuario</h5>
                                 </div>
                             </div>
-                            <a class="dropdown-item logout pb-0" asp-action="Login" asp-controller="Seguridad"><img src="~/assets/img/icons/log-out.svg" class="me-2" alt="img">Cerrar Sesión</a>
+                            <a class="dropdown-item logout pb-0" asp-action="Logout" asp-controller="Seguridad"><img src="~/assets/img/icons/log-out.svg" class="me-2" alt="img">Cerrar Sesión</a>
                         </div>
                     </div>
                 </li>
