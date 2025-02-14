@@ -34,6 +34,7 @@
                         <th>Género</th>
                         <th>Marca</th>
                         <th>Categoría</th>
+                        <th>Fecha de Creación</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -48,6 +49,7 @@
                             <td>@producto.Genero</td>
                             <td>@producto.Marca</td>
                             <td>@producto.Categoria?.Nombre</td>
+                            <td>@producto.FechaCreacion</td>
                             <td>@(producto.Estado == true ? "Activado" : "Desactivado")</td>
                             <td>
                                 <a class="me-3" asp-action="Estado" asp-route-id="@producto.Id">
