@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Models;
 
 namespace SistemaVentaDeRopaOnline.Data
 {
-    public class SistemaContext : DbContext
+    public class SistemaContext : IdentityDbContext<Usuario>
     {
         public SistemaContext(DbContextOptions<SistemaContext> options) : base(options)
         {

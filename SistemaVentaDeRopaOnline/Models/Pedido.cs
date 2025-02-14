@@ -13,7 +13,7 @@ public class Pedido
     [StringLength(50)]
     public string Estado { get; set; } = null!;
     public double Total { get; set; }
-    public int UsuarioId { get; set; }
+    public string UsuarioId { get; set; } = null!;
     public Usuario Usuario { get; set; } = null!;
     public int? VentaId { get; set; }
     public Venta? Venta { get; set; }

@@ -5,17 +5,17 @@
 namespace SistemaVentaDeRopaOnline.Migrations
 {
     /// <inheritdoc />
-    public partial class AgregarrestricciónalNombredeTalla : Migration
+    public partial class modificarpropiedadnombredeUsuario : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Nombre",
-                table: "Tallas",
-                type: "nvarchar(10)",
-                maxLength: 10,
-                nullable: false,
+                table: "AspNetUsers",
+                type: "nvarchar(30)",
+                maxLength: 30,
+                nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(30)",
                 oldMaxLength: 30);
@@ -26,13 +26,15 @@ namespace SistemaVentaDeRopaOnline.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Nombre",
-                table: "Tallas",
+                table: "AspNetUsers",
                 type: "nvarchar(30)",
                 maxLength: 30,
                 nullable: false,
+                defaultValue: "",
                 oldClrType: typeof(string),
-                oldType: "nvarchar(10)",
-                oldMaxLength: 10);
+                oldType: "nvarchar(30)",
+                oldMaxLength: 30,
+                oldNullable: true);
         }
     }
 }

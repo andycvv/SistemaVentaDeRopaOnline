@@ -1,0 +1,53 @@
+﻿@model SistemaVentaDeRopaOnline.Models.ViewModels.LoginViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutSeguridad.cshtml";
+}
+
+<div class="main-wrapper">
+    <div class="account-content">
+        <div class="login-wrapper">
+            <div class="login-content">
+                <form asp-action="Ingresar" class="login-userset">
+                    <div class="login-logo">
+                        <h1 class="fs-2 fw-bold">FASHION</h1>
+                    </div>
+                    <div class="login-userheading">
+                        <h3>Iniciar sesión</h3>
+                        <h4>Ingresa con tu cuenta</h4>
+                    </div>
+                    <div class="form-login">
+                        <label>Correo electrónico</label>
+                        <div class="form-addons">
+                            <input asp-for="Correo" type="text" placeholder="Ingresa tu correo electrónico">
+                        </div>
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                    <div class="form-login">
+                        <label>Contraseña</label>
+                        <div class="pass-group">
+                            <input asp-for="Password" type="password" class="pass-input" placeholder="Ingresa tu contraseña">
+                            <span class="fas toggle-password fa-eye-slash"></span>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <input asp-for="Recordarme" class="form-check-input" type="checkbox" id="recordarme">
+                        <label class="form-check-label" for="recordarme">
+                            Recordarme
+                        </label>
+                    </div>
+                    <div class="form-login">
+                        <button type="submit" class="btn btn-login">Ingresar</button>
+                    </div>
+                    <div class="signinform text-center">
+                        <h4>¿No tienes cuenta? <a asp-action="Registrar" class="hover-a">Regìstrate</a></h4>
+                    </div>
+                </form>
+            </div>
+            <div class="login-img">
+                <img src="~/assets/img/login.jpg" alt="img">
+            </div>
+        </div>
+    </div>
+</div>
