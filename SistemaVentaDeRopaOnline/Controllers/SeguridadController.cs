@@ -67,7 +67,15 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                 if (resultado.Succeeded)
                 {
+                    var usuario = await _userManager.GetUserAsync(User);
+
                     CrearAlerta("success", "Sesión iniciada correctamente");
+
+                    if(await _userManager.IsInRoleAsync(usuario, "Administrador"))
+                    {
+                        return RedirectToAction("Listar", "Producto");
+                    }
+
                     return RedirectToAction("Index", "Producto");
                 }
 
