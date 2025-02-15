@@ -16,6 +16,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var usuario = await _userManager.GetUserAsync(User);
@@ -90,7 +91,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
                     }
                     else
                     {
-                        await ActualizarDetallePedido(detalleExistente, precio);
+                        await ActualizarDetallePedido(detalleExistente, precio, 1);
                     }
 
                     await ActualizarTotalPedido(pedidoExistente);
@@ -106,6 +107,49 @@ namespace SistemaVentaDeRopaOnline.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SumarCantidad(int id)
+        {
+            var detallepedido = await context.DetallePedidos
+                .Include(d => d.Pedido)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if(detallepedido == null)
+            {
+                CrearAlerta("error", "Detalle de pedido no encontrado.");
+                return RedirectToAction("Index");
+            }
+
+            await ActualizarDetallePedido(detallepedido, detallepedido.Precio, +1);
+            await ActualizarTotalPedido(detallepedido.Pedido);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RestarCantidad(int id)
+        {
+            var detallepedido = await context.DetallePedidos
+                .Include(d => d.Pedido)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (detallepedido == null)
+            {
+                CrearAlerta("error", "Detalle de pedido no encontrado.");
+                return RedirectToAction("Index");
+            }
+
+            if (detallepedido.Cantidad > 1)
+            {
+                await ActualizarDetallePedido(detallepedido, detallepedido.Precio, -1);
+            }
+            
+            await ActualizarTotalPedido(detallepedido.Pedido);
+
+            return RedirectToAction("Index");
+        }
+
         private async Task<Pedido?> ObtenerPedidoPendiente(string usuarioId)
         {
             return await context.Pedidos
@@ -169,10 +213,12 @@ namespace SistemaVentaDeRopaOnline.Controllers
             await context.SaveChangesAsync();
         }
 
-        private async Task ActualizarDetallePedido(DetallePedido detallePedido, double precio)
+        private async Task ActualizarDetallePedido(DetallePedido detallePedido, double precio, int cantidad)
         {
-            detallePedido.Cantidad += 1;
-            detallePedido.Precio = detallePedido.Cantidad * precio;
+            double precioUnitario = detallePedido.Precio / detallePedido.Cantidad;
+
+            detallePedido.Cantidad = Math.Max(1, detallePedido.Cantidad + cantidad);
+            detallePedido.Precio = detallePedido.Cantidad * precioUnitario;
 
             context.DetallePedidos.Update(detallePedido);
             await context.SaveChangesAsync();

@@ -31,13 +31,13 @@
                                 <div class="col-3" aria-label="Page navigation example">
                                     <ul class="pagination justify-content-end">
                                         <li class="page-item">
-                                            <a class="page-link text-black" href="#">+</a>
+                                            <a class="page-link text-black" asp-action="SumarCantidad" asp-route-id="@detalle.Id">+</a>
                                         </li>
                                         <li class="page-item">
                                             <a class="page-link text-black">@detalle.Cantidad</a>
                                         </li>
                                         <li class="page-item">
-                                            <a class="page-link text-black" href="#">-</a>
+                                            <a class="page-link text-black" asp-action="RestarCantidad" asp-route-id="@detalle.Id">-</a>
                                         </li>
                                     </ul>
                                 </div>
