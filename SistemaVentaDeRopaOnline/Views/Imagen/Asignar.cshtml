@@ -24,7 +24,7 @@
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="Url">URL de la Imagen</label>
-                        <input type="text" name="Url">
+                        <input type="text" name="Url" required>
                     </div>
                 </div>
                 <div class="col-lg-12">
@@ -68,7 +68,7 @@
                                 <img src="@imagen.Url" style="width: 100px" />
                             </td>
                             <td>
-                                <a class="me-3" onclick="showConfirmDeleteAlert('Producto', 'Eliminar', @imagen.Id)">
+                                <a class="me-3" onclick="showConfirmDeleteAlert('Imagen', 'Eliminar', '?id=@imagen.Id&productoId=@Model.Producto.Id')">
                                     <img src="~/assets/img/icons/delete.svg" alt="img">
                                 </a>
                             </td>
