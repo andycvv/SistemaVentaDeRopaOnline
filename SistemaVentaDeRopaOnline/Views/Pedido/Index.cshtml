@@ -1,0 +1,73 @@
+﻿@model SistemaVentaDeRopaOnline.Models.Pedido;
+
+@{
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+<div class="container">
+
+    <div class="row mb-5">
+        <div class="col-12 col-lg-8">
+            <h2 class="fw-bold row">TU CARRITO</h2>
+            <p class="row">TOTAL (@Model.DetallePedidos.Count()) producto(s) S/. @Model.Total.ToString("F2") </p>
+            <div class="d-flex flex-column gap-3">
+                @foreach (var detalle in Model.DetallePedidos)
+                {
+                    <div class="row gap-3 border border-1 border-black">
+                        <div class="row col-4">
+                            <img src="@detalle.Inventario.Producto.ImagenProductos.First().Url"
+                                 class="w-100 h-100 object-fit-cover p-0" />
+                        </div>
+                        <div class="row col-8 py-3 p-0">
+                            <div class="row">
+                                <h4 class="fs-5 col-12 col-lg-9">@detalle.Inventario.Producto.Nombre</h4>
+                                <strong class="col-12 col-lg-3 text-end ">S/. @detalle.Inventario.Producto.Precio.ToString("F2")</strong>
+                            </div>
+                            <div class="row">
+                                <p>Color: @detalle.Inventario.Color.Nombre</p>
+                            </div>
+                            <div class="row">
+                                <p class="col-9">Talla: @detalle.Inventario.Talla.Nombre</p>
+                                <div class="col-3" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-end">
+                                        <li class="page-item">
+                                            <a class="page-link text-black" asp-action="SumarCantidad" asp-route-id="@detalle.Id">+</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link text-black">@detalle.Cantidad</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link text-black" asp-action="RestarCantidad" asp-route-id="@detalle.Id">-</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 ps-4 pe-lg-0 pt-3 pt-lg-0">
+            <button class="col-12 bg-black text-white justify-content-center align-items-center fw-medium py-3 mb-4">IR A PAGAR</button>
+
+            <div class="row">
+                <h3 class="mb-4 fw-bold fs-5">RESUMEN DEL PEDIDO</h3>
+                <div>
+                    <span>@Model.DetallePedidos.Sum(d => d.Cantidad) producto(s): </span>
+                    <span>S/. @Model.Total.ToString("F2")</span>
+                </div>
+                <div>
+                    <span>Entrega</span>
+                    <span>Gratis</span>
+                </div>
+                <div>
+                    <strong>Total</strong>
+                    <strong>S/. @Model.Total.ToString("F2")</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
