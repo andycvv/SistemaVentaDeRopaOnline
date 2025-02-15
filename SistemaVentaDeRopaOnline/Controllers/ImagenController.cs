@@ -52,5 +52,29 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return View(modelo);
         }
+
+        public async Task<IActionResult> Eliminar(int id, int productoId)
+        {
+            var imagen = await _sistemaContext.Imagenes.FirstOrDefaultAsync(i => i.Id == id);
+
+            try
+            {
+                _sistemaContext.Imagenes.Remove(imagen);
+                await _sistemaContext.SaveChangesAsync();
+                CrearAlerta("success", "Se elimino la imagen correctamente");
+            }
+            catch
+            {
+                CrearAlerta("error", "No se puede eliminar la imagen, porque está siendo utilizado en el inventario");
+            }
+ 
+            return RedirectToAction("Asignar", new { id = productoId });
+        }
+
+        public void CrearAlerta(string alertType, string alertMessage)
+        {
+            TempData["AlertMessage"] = alertMessage;
+            TempData["AlertType"] = alertType;
+        }
     }
 }
