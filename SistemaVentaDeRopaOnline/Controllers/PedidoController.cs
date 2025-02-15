@@ -37,7 +37,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 .Include(p => p.DetallePedidos)
                     .ThenInclude(d => d.Inventario)
                     .ThenInclude(i => i.Talla)
-                .Where(p => p.UsuarioId == u.Id)
+                .Where(p => p.UsuarioId == usuario.Id)
                 .FirstOrDefaultAsync();
 
             if (pedido == null) pedido = new Pedido();
