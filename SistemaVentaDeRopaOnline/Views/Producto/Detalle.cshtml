@@ -65,10 +65,10 @@
             <input type="hidden" name="precio" value="@Model.Precio" />
             <input type="hidden" name="ideTal" value="@ViewBag.IdeTal" />
 
-            @if (TempData["Error"] != null)
+            @if (TempData["Advertencia"] != null)
             {
                     <div class="alert alert-primary" role="alert">
-                    @TempData["Error"]
+                    @TempData["Advertencia"]
                     </div>
             }
             <button class="w-100 btn btn-secondary">Agregar al Carrito</button>
