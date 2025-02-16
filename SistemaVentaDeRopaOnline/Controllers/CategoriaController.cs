@@ -75,7 +75,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(categoria);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Estado(int id)
         {
             var categoria = await _sistemaContext.Categorias.FirstOrDefaultAsync(c => c.Id == id);
