@@ -1,9 +1,15 @@
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
 function showSuccessAlert(mensaje)
 {
     Swal.fire({
         position: "top-end",
         icon: "success",
-        title: mensaje,
+        title: decodeHtml(mensaje),
         showConfirmButton: false,
         timer: 2000
     });
@@ -31,6 +37,6 @@ function showErrorAlert(mensaje)
     Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: mensaje,
+        text: decodeHtml(mensaje),
     });
 }

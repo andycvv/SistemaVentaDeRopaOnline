@@ -1,0 +1,128 @@
+﻿@model SistemaVentaDeRopaOnline.Models.Venta;
+
+@{
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+<div class="container">
+    <div class="row col-12 text-center">
+        <h2 class="fw-bold">PAGAR</h2>
+        <p class="text-secondary">@Model.Pedido.DetallePedidos.Sum(d => d.Cantidad) producto(s) S/. @Model.Pedido.Total</p>
+    </div>
+
+    <div class="row mb-5">
+        <form asp-action="Crear" class="col-12 col-lg-8">
+            <div class="row col-12">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h3 class="fs-5 fw-bold mb-5">CONTACTO</h3>
+                        <div class="mb-3">
+                            <label for="Correo" class="form-label">Correo electrónico</label>
+                            <input asp-for="Correo" type="email" class="form-control" value="@Model.Pedido.Usuario.Email">
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row col-12">
+                <h3 class="fs-5 fw-bold mb-5">DIRECCIÓN</h3>
+                <h4 class="fs-6 fw-semibold">Dirección de envío</h4>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="Nombre" class="form-label">Nombres</label>
+                        <input asp-for="Nombre" type="text" class="form-control">
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-6">
+                        <label for="Apellido" class="form-label">Apellidos</label>
+                        <input asp-for="Apellido" type="text" class="form-control">
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="Direccion" class="form-label">Dirección</label>
+                        <input asp-for="Direccion" type="text" class="form-control">
+                        <span asp-validation-for="Direccion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="Telefono" class="form-label">Teléfono</label>
+                        <input asp-for="Telefono" type="text" class="form-control">
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="DNI" class="form-label">DNI</label>
+                        <input asp-for="DNI" type="text" class="form-control">
+                        <span asp-validation-for="DNI" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="TipoComprobante" class="form-label">Tipo de comprobante</label>
+                        <select asp-for="TipoComprobante" class="form-select">
+                            <option value="Boleta">Boleta</option>
+                            <option value="Factura">Factura</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input hidden asp-for="Fecha" value="@Model.Fecha" type="text" class="form-control">
+                <input hidden asp-for="MetodoPago" value="@Model.MetodoPago" type="text" class="form-control">
+                <input hidden asp-for="PedidoId" value="@Model.PedidoId" type="number" class="form-control">
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <button class="d-flex text-decoration-none col-12 bg-black text-white justify-content-center align-items-center fw-medium py-3 mb-4"
+                                type="submit">
+                            PAGAR
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="col-12 col-lg-4">
+            <div class="row justify-content-between mb-5">
+                <h3 class="fs-5 fw-bold col-6">TU PEDIDO</h3>
+                <a asp-action="Index" asp-controller="Pedido" class="text-black fw-semibold fs-5 col-6">Editar</a>
+            </div>
+            <div class="row justify-content-between">
+                <p class="fs-6 col-6">@Model.Pedido.DetallePedidos.Sum(d => d.Cantidad) producto(s)</p>
+                <p class="fs-6 col-6">S/. @Model.Pedido.Total</p>
+            </div>
+            <div class="row justify-content-between">
+                <p class="fs-6 col-6">Entrega</p>
+                <p class="fs-6 col-6">Gratis</p>
+            </div>
+            <div class="row justify-content-between mb-5">
+                <p class="fs-6 col-6">Total</p>
+                <p class="fs-6 col-6">S/. @Model.Pedido.Total</p>
+            </div>
+            <hr />
+            @foreach(var detalle in Model.Pedido.DetallePedidos)
+            {
+                <div class="row col-12 mb-3">
+                    <div class="col-5">
+                        <img class="w-100 h-100 object-fit-cover p-0" src="@detalle.Inventario.Producto.ImagenProductos.FirstOrDefault()?.Url" />
+                    </div>
+                    <div class="col-7">
+                        <p class="fs-5 fw-semibold">@detalle.Inventario.Producto.Nombre.ToUpper()</p>
+                        <p class="fs-5 fw-semibold">S/. @detalle.Inventario.Producto.Precio</p>
+                        <p class="fs-6 text-secondary">Tamaño: @detalle.Inventario.Talla.Nombre / Cantidad: @detalle.Cantidad</p>
+                        <p class="fs-6 text-secondary">Color: @detalle.Inventario.Color.Nombre</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
