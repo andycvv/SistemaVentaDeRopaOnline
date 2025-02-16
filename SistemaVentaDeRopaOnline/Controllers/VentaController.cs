@@ -60,9 +60,10 @@ namespace SistemaVentaDeRopaOnline.Controllers
             {
                 try
                 {
-                    if (!await ExisteStock(pedido))
+                    var (existeStock, mensajeError) = await ExisteStock(pedido);
+                    if (!existeStock)
                     {
-                        CrearAlerta("error", "No hay suficiente stock");
+                        CrearAlerta("error", mensajeError!);
                         return View(venta);
                     }
 
@@ -82,7 +83,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 }
             }
         }
-
+            
         private async Task<Pedido?> ObtenerPedidoAsync(int? pedidoId = null, string? userId = null)
         {
             var consulta = context.Pedidos
@@ -111,17 +112,20 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return null;
         }
-        private async Task<bool> ExisteStock(Pedido pedido)
+        private async Task<(bool existeStock, string? mensajeError)> ExisteStock(Pedido pedido)
         {
             foreach (var detalle in pedido.DetallePedidos)
             {
                 if (detalle.Cantidad > detalle.Inventario.Stock)
                 {
-                    return false;
+                    string mensajeError = $"No hay suficiente stock para el producto {detalle.Inventario.Producto.Nombre}. " +
+                      $"Stock disponible: {detalle.Inventario.Stock}, solicitado: {detalle.Cantidad}.";
+                    return (false, mensajeError);
                 }
             }
-            return true;
+            return (true, null);
         }
+
         private async Task ActualizarStock (Pedido pedido)
         {
             foreach (var detalle in pedido.DetallePedidos)
