@@ -72,6 +72,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                     await transaction.CommitAsync();
 
+                    CrearAlerta("success", "Se registro la venta correctamente");
                     return RedirectToAction("Index", "Pedido");
                 } 
                 catch
