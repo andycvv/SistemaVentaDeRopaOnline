@@ -143,9 +143,13 @@ namespace SistemaVentaDeRopaOnline.Controllers
             if (detallepedido.Cantidad > 1)
             {
                 await ActualizarDetallePedido(detallepedido, detallepedido.Precio, -1);
+            } else
+            {
+                context.DetallePedidos.Remove(detallepedido);
+                await context.SaveChangesAsync();
             }
-            
-            await ActualizarTotalPedido(detallepedido.Pedido);
+
+                await ActualizarTotalPedido(detallepedido.Pedido);
 
             return RedirectToAction("Index");
         }
@@ -222,20 +226,6 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             context.DetallePedidos.Update(detallePedido);
             await context.SaveChangesAsync();
-        }
-
-        private async Task ActualizarInventario(Inventario inventario)
-        {
-            if (inventario != null && inventario.Stock > 0)
-            {
-                inventario.Stock -= 1;
-                context.Inventarios.Update(inventario);
-                await context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new InvalidOperationException("Stock no disponible o insuficiente.");
-            }
         }
 
         public void CrearAlerta(string alertType, string alertMessage)
