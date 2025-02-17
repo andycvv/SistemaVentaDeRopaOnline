@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models;
 using System.Runtime.CompilerServices;
+using MercadoPago.Config;
+using MercadoPago.Client.Preference;
+using MercadoPago.Resource.Preference;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
@@ -15,6 +18,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             this.context = context;
             _userManager = userManager;
+            MercadoPagoConfig.AccessToken = "TEST-1563437956463647-021621-371a95475791607c07e79736c573c10c-207340671";
         }
         public async Task<IActionResult> Crear ()
         {
@@ -38,6 +42,9 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 Pedido = pedido,
                 MetodoPago = "Tarjeta"
             };
+
+            string urlPago = await CrearPago(venta);
+            ViewBag.UrlPago = urlPago;
 
             return View(venta);
         }
@@ -83,7 +90,37 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 }
             }
         }
-            
+
+        private async Task<string> CrearPago(Venta venta)
+        {
+            var preferenceRequest = new PreferenceRequest
+            {
+                Items = venta.Pedido.DetallePedidos.Select(d => new PreferenceItemRequest
+                {
+                    Title = d.Inventario.Producto.Nombre,
+                    Quantity = d.Cantidad,
+                    CurrencyId = "PEN",
+                    UnitPrice = Convert.ToDecimal(d.Inventario.Producto.Precio)
+                }).ToList(),
+                Payer = new PreferencePayerRequest
+                {
+                    Email = "TESTUSER837991704@testuser.com"
+                },
+                BackUrls = new PreferenceBackUrlsRequest
+                {
+                    Success = "https://localhost:7067/Venta/PagoExitoso",
+                    Failure = "https://localhost:7067/Venta/PagoFallido",
+                    Pending = "https://localhost:7067//Venta/PagoPendiente"
+                },
+                AutoReturn = "approved"
+            };
+
+            var client = new PreferenceClient();
+            Preference preference = await client.CreateAsync(preferenceRequest);
+
+            return preference.InitPoint;
+        }
+
         private async Task<Pedido?> ObtenerPedidoAsync(int? pedidoId = null, string? userId = null)
         {
             var consulta = context.Pedidos
