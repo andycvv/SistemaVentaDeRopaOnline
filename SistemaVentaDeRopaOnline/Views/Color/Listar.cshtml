@@ -1,0 +1,99 @@
+﻿@model List<SistemaVentaDeRopaOnline.Models.Color>
+
+@{
+    ViewData["Title"] = "Lista de Colores";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-title">
+        <h4>Colores</h4>
+        <h6>Gestiona tus colores</h6>
+    </div>
+    <div class="page-btn">
+        <a asp-action="Crear" asp-controller="Color" class="btn btn-added">
+            <img src="~/assets/img/icons/plus.svg" alt="img" class="me-1">Agregar Nuevo Color
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-input">
+                    <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table datanew" id="colorTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Código</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var color in Model)
+                    {
+                        <tr>
+                            <td>@color.Id</td>
+                            <td>@color.Nombre</td>
+                            <td>@color.Codigo</td>
+                            <td>@(color.Estado ? "Activado" : "Desactivado")</td>
+                            <td>
+                                <a class="me-3" asp-action="Estado" asp-route-id="@color.Id">
+                                    @if (color.Estado)
+                                    {
+                                        <i class="fs-4 bi bi-toggle-on"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fs-4 bi bi-toggle-off"></i>
+                                    }
+                                </a>
+                                <a class="me-3" asp-action="Editar" asp-route-id="@color.Id">
+                                    <img src="~/assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a class="confirm-text" onclick="showConfirmDeleteAlert('Color', 'Eliminar', @color.Id)">
+                                    <img src="~/assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function searchColors() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("colorTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none"; // Ocultar fila por defecto
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            tr[i].style.display = ""; // Mostrar fila
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+}
