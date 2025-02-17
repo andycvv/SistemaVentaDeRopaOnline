@@ -43,7 +43,10 @@
                     {
                         <tr>
                             <td>@color.Id</td>
-                            <td>@color.Nombre</td>
+                            <td>
+                                <div style="width: 20px; height: 20px; background-color:@color.Codigo; border-radius: 50%; display: inline-block; vertical-align: middle;"></div>
+                                @color.Nombre
+                            </td>
                             <td>@color.Codigo</td>
                             <td>@(color.Estado ? "Activado" : "Desactivado")</td>
                             <td>
