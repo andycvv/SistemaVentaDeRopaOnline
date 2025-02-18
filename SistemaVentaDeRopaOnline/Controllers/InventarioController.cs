@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
 
 namespace SistemaVentaDeRopaOnline.Controllers
@@ -11,9 +12,10 @@ namespace SistemaVentaDeRopaOnline.Controllers
             _sistemaContext = sistemaContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Listar()
         {
-            return View();
+            var inventarios = await _sistemaContext.Inventarios.Include(i => i.Producto).Include(i => i.Talla).Include(i => i.Color).ToListAsync();
+            return View(inventarios);
         }
     }
 }
