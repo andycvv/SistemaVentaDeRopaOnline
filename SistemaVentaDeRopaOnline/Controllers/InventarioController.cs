@@ -20,6 +20,53 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(inventarios);
         }
 
+        public async Task<IActionResult> Crear()
+        {
+            var productos = await _sistemaContext.Productos.Where(p => p.Estado).ToListAsync();
+            ViewBag.Productos = new SelectList(productos, "Id", "Nombre");
+
+            var tallas = await _sistemaContext.Tallas.Where(t => t.Estado).ToListAsync();
+            ViewBag.Tallas = new SelectList(tallas, "Id", "Nombre");
+
+            var colores = await _sistemaContext.Colores.Where(c => c.Estado).ToListAsync();
+            ViewBag.Colores = new SelectList(colores, "Id", "Nombre");
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear([Bind("Id, ProductoId, TallaId, ColorId, Stock")] Inventario inventario)
+        {
+            if (ModelState.IsValid)
+            {
+                var duplicado = await _sistemaContext.Inventarios.FirstOrDefaultAsync(i => i.ProductoId == inventario.ProductoId && i.TallaId == inventario.TallaId && i.ColorId == inventario.ColorId);
+                if (duplicado == null)
+                {
+                    _sistemaContext.Inventarios.Add(inventario);
+                    await _sistemaContext.SaveChangesAsync();
+                    CrearAlerta("success", "Se registró el inventario correctamente");
+                }
+                else
+                {
+                    CrearAlerta("error", "El inventario ya existe");
+                }
+
+                return RedirectToAction("Listar");
+            }
+            var productos = await _sistemaContext.Productos.Where(p => p.Estado).ToListAsync();
+            ViewBag.Productos = new SelectList(productos, "Id", "Nombre");
+
+            var tallas = await _sistemaContext.Tallas.Where(t => t.Estado).ToListAsync();
+            ViewBag.Tallas = new SelectList(tallas, "Id", "Nombre");
+
+            var colores = await _sistemaContext.Colores.Where(c => c.Estado).ToListAsync();
+            ViewBag.Colores = new SelectList(colores, "Id", "Nombre");
+
+            return View(inventario);
+        }
+
+
+
         public void CrearAlerta(string alertType, string alertMessage)
         {
             TempData["AlertMessage"] = alertMessage;
