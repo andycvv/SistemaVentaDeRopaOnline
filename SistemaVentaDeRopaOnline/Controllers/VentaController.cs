@@ -18,8 +18,9 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             this.context = context;
             _userManager = userManager;
-            MercadoPagoConfig.AccessToken = "TEST-1563437956463647-021621-371a95475791607c07e79736c573c10c-207340671";
+            MercadoPagoConfig.AccessToken = "APP_USR-3117456896561429-021809-e122fff0dc26478fbe16ef17906d9342-2275386132";
         }
+        [HttpGet]
         public async Task<IActionResult> Crear ()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -90,7 +91,16 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 }
             }
         }
+        [HttpGet]
+        public IActionResult PagoExitoso(string collection_id, string payment_id, string status, string payment_type)
+        {
+            ViewBag.CollectionId = collection_id;
+            ViewBag.PaymentId = payment_id;
+            ViewBag.Status = status;
+            ViewBag.PaymentType = payment_type;
 
+            return View();
+        }
         private async Task<string> CrearPago(Venta venta)
         {
             var preferenceRequest = new PreferenceRequest
@@ -120,7 +130,6 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return preference.InitPoint;
         }
-
         private async Task<Pedido?> ObtenerPedidoAsync(int? pedidoId = null, string? userId = null)
         {
             var consulta = context.Pedidos
@@ -162,7 +171,6 @@ namespace SistemaVentaDeRopaOnline.Controllers
             }
             return (true, null);
         }
-
         private async Task ActualizarStock (Pedido pedido)
         {
             foreach (var detalle in pedido.DetallePedidos)
