@@ -44,7 +44,10 @@
                             <td>@inventario.Id</td>
                             <td>@(inventario.Producto?.Nombre.Length > 20 ? inventario.Producto?.Nombre.Substring(0, 20) + "..." : inventario.Producto?.Nombre)</td>
                             <td>@inventario.Talla?.Nombre</td>
-                            <td>@inventario.Color?.Nombre</td>
+                            <td>
+                                <div style="width: 20px; height: 20px; background-color: @inventario.Color.Codigo; border-radius: 50%; display: inline-block; vertical-align: middle;"></div> 
+                                @inventario.Color?.Nombre
+                            </td>
                             <td>@inventario.Stock</td>
                             <td>@(inventario.Estado == true ? "Activado" : "Desactivado")</td>
                             <td>
