@@ -1,0 +1,77 @@
+﻿@model List<SistemaVentaDeRopaOnline.Models.Inventario>
+@{
+    ViewData["title"] = "Listar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-title">
+        <h4>Lista de Inventarios</h4>
+        <h6>Gestiona tus inventarios</h6>
+    </div>
+    <div class="page-btn">
+        <a asp-action="Crear" asp-controller="Inventario" class="btn btn-added"><img src="~/assets/img/icons/plus.svg" alt="img" class="me-1">Agregar Nuevo Iventario</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-input">
+                    <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table  datanew">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Producto</th>
+                        <th>Talla</th>
+                        <th>Color</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var inventario in Model)
+                    {
+                        <tr>
+                            <td>@inventario.Id</td>
+                            <td>@(inventario.Producto?.Nombre.Length > 20 ? inventario.Producto?.Nombre.Substring(0, 20) + "..." : inventario.Producto?.Nombre)</td>
+                            <td>@inventario.Talla?.Nombre</td>
+                            <td>
+                                <div style="width: 20px; height: 20px; background-color: @inventario.Color.Codigo; border-radius: 50%; display: inline-block; vertical-align: middle;"></div> 
+                                @inventario.Color?.Nombre
+                            </td>
+                            <td>@inventario.Stock</td>
+                            <td>@(inventario.Estado == true ? "Activado" : "Desactivado")</td>
+                            <td>
+                                <a class="me-3" asp-action="Estado" asp-route-id="@inventario.Id">
+                                    @if (inventario.Estado)
+                                    {
+                                        <i class="fs-4 bi bi-toggle-on"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fs-4 bi bi-toggle-off"></i>
+                                    }
+                                </a>
+                                <a class="me-3" asp-action="Editar" asp-route-id="@inventario.Id">
+                                    <img src="~/assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a class="confirm-text" onclick="showConfirmDeleteAlert('Inventario', 'Eliminar', @inventario.Id)">
+                                    <img src="~/assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
