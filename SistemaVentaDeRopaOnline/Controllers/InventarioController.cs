@@ -53,6 +53,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                 return RedirectToAction("Listar");
             }
+
             var productos = await _sistemaContext.Productos.Where(p => p.Estado).ToListAsync();
             ViewBag.Productos = new SelectList(productos, "Id", "Nombre");
 
@@ -73,6 +74,54 @@ namespace SistemaVentaDeRopaOnline.Controllers
             CrearAlerta("success", "Se actualizó el estado correctamente");
 
             return RedirectToAction("Listar");
+        }
+
+        public async Task<IActionResult> Editar(int id)
+        {
+            var inventario = await _sistemaContext.Inventarios.FirstOrDefaultAsync(i => i.Id == id);
+
+            var productos = await _sistemaContext.Productos.Where(p => p.Estado).ToListAsync();
+            ViewBag.Productos = new SelectList(productos, "Id", "Nombre");
+
+            var tallas = await _sistemaContext.Tallas.Where(t => t.Estado).ToListAsync();
+            ViewBag.Tallas = new SelectList(tallas, "Id", "Nombre");
+
+            var colores = await _sistemaContext.Colores.Where(c => c.Estado).ToListAsync();
+            ViewBag.Colores = new SelectList(colores, "Id", "Nombre");
+
+            return View(inventario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(int id, [Bind("Id, ProductoId, TallaId, ColorId, Stock, Estado")] Inventario inventario)
+        {
+            if (ModelState.IsValid)
+            {
+                var duplicado = await _sistemaContext.Inventarios.FirstOrDefaultAsync(i => i.ProductoId == inventario.ProductoId && i.TallaId == inventario.TallaId && i.ColorId == inventario.ColorId && i.Id != inventario.Id);
+                if (duplicado == null)
+                {
+                    _sistemaContext.Inventarios.Update(inventario);
+                    await _sistemaContext.SaveChangesAsync();
+                    CrearAlerta("success", "Se editó el inventario correctamente");
+                }
+                else
+                {
+                    CrearAlerta("error", "El inventario ya existe");
+                }
+
+                return RedirectToAction("Listar");
+            }
+
+            var productos = await _sistemaContext.Productos.Where(p => p.Estado).ToListAsync();
+            ViewBag.Productos = new SelectList(productos, "Id", "Nombre");
+
+            var tallas = await _sistemaContext.Tallas.Where(t => t.Estado).ToListAsync();
+            ViewBag.Tallas = new SelectList(tallas, "Id", "Nombre");
+
+            var colores = await _sistemaContext.Colores.Where(c => c.Estado).ToListAsync();
+            ViewBag.Colores = new SelectList(colores, "Id", "Nombre");
+
+            return View(inventario);
         }
 
         public void CrearAlerta(string alertType, string alertMessage)
