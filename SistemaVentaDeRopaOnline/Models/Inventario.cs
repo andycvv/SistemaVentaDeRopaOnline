@@ -11,7 +11,8 @@ public class Inventario
     public int ProductoId { get; set; }
     public int TallaId { get; set; }
     public int ColorId { get; set; }
-    public int Stock { get; set; }
+    [Range(1, 1000, ErrorMessage = "Ingrese un número válido para stock mayor a 0.")]
+    public int Stock { get; set; } = 0;
     public Color Color { get; set; } = null!;
     public Producto Producto { get; set; } = null!;
     public Talla Talla { get; set; } = null!;
