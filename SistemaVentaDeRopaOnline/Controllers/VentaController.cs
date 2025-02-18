@@ -43,10 +43,6 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 Pedido = pedido,
                 MetodoPago = "Tarjeta"
             };
-
-            string urlPago = await CrearPago(venta);
-            ViewBag.UrlPago = urlPago;
-
             return View(venta);
         }
         [HttpPost]
@@ -64,16 +60,57 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 return View(venta);
             }
 
+            var (existeStock, mensajeError) = await ExisteStock(pedido);
+            if (!existeStock)
+            {
+                CrearAlerta("error", mensajeError!);
+                return View(venta);
+            }
+
+            string urlPago = await CrearPago(pedido, venta.Nombre, venta.Apellido, venta.Telefono, venta.TipoComprobante, venta.Correo, venta.Direccion, venta.DNI);
+            return Redirect(urlPago);
+        }
+        [HttpGet]
+        public async Task<IActionResult> PagoExitoso(string collection_id, string payment_id, string status, string payment_type, int pedidoId, string nombre, string apellido, string telefono, string tipocomprobante, string correo, string direccion, string dni)
+        {
+            if (status != "approved")
+            {
+                CrearAlerta("error", "El pago no fue aprobado.");
+                return RedirectToAction("Index", "Producto");
+            }
+
+            var pedido = await ObtenerPedidoAsync(pedidoId: pedidoId);
+            if (pedido == null)
+            {
+                CrearAlerta("error", "No se encontró el pedido.");
+                return RedirectToAction("Index", "Producto");
+            }
+
+            var (existeStock, mensajeError) = await ExisteStock(pedido);
+            if (!existeStock)
+            {
+                CrearAlerta("error", mensajeError!);
+                return RedirectToAction("Index", "Producto");
+            }
+
             using (var transaction = await context.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    var (existeStock, mensajeError) = await ExisteStock(pedido);
-                    if (!existeStock)
+                    Venta venta = new Venta()
                     {
-                        CrearAlerta("error", mensajeError!);
-                        return View(venta);
-                    }
+                        Fecha = DateTime.Now,
+                        PedidoId = pedido.Id,
+                        Pedido = pedido,
+                        MetodoPago = "Tarjeta",
+                        Nombre = nombre,
+                        Apellido = apellido,
+                        Telefono = telefono,
+                        TipoComprobante = tipocomprobante,
+                        Correo = correo,
+                        Direccion = direccion,
+                        DNI = dni
+                    };
 
                     await ActualizarStock(pedido);
                     await RegistrarVenta(venta);
@@ -81,19 +118,14 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                     await transaction.CommitAsync();
 
-                    CrearAlerta("success", "Se registro la venta correctamente");
-                    return RedirectToAction("Index", "Pedido");
-                } 
+                    CrearAlerta("success", "Pago exitoso y venta registrada correctamente.");
+                }
                 catch
                 {
-                    CrearAlerta("error", "Algo salio mal al registrar la venta");
-                    return View(venta);
+                    CrearAlerta("error", "Error al registrar la venta.");
                 }
             }
-        }
-        [HttpGet]
-        public IActionResult PagoExitoso(string collection_id, string payment_id, string status, string payment_type)
-        {
+
             ViewBag.CollectionId = collection_id;
             ViewBag.PaymentId = payment_id;
             ViewBag.Status = status;
@@ -101,11 +133,19 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return View();
         }
-        private async Task<string> CrearPago(Venta venta)
+        [HttpGet]
+        public IActionResult PagoFallido()
+        {
+            CrearAlerta("error", "El pago no fue aprobado.");
+            return RedirectToAction("Index", "Producto");
+        }
+
+        // metodos complementarios
+        private async Task<string> CrearPago(Pedido pedido, string nombre, string apellido, string telefono, string tipocomprobante, string correo, string direccion, string dni)
         {
             var preferenceRequest = new PreferenceRequest
             {
-                Items = venta.Pedido.DetallePedidos.Select(d => new PreferenceItemRequest
+                Items = pedido.DetallePedidos.Select(d => new PreferenceItemRequest
                 {
                     Title = d.Inventario.Producto.Nombre,
                     Quantity = d.Cantidad,
@@ -118,7 +158,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 },
                 BackUrls = new PreferenceBackUrlsRequest
                 {
-                    Success = "https://localhost:7067/Venta/PagoExitoso",
+                    Success = "https://localhost:7067/Venta/PagoExitoso?pedidoId=" + pedido.Id +"&nombre=" + nombre +"&apellido=" + apellido + "&telefono=" + telefono + "&tipocomprobante=" + tipocomprobante + "&correo=" + correo + "&direccion=" + direccion + "&dni=" + dni,
                     Failure = "https://localhost:7067/Venta/PagoFallido",
                     Pending = "https://localhost:7067//Venta/PagoPendiente"
                 },
