@@ -65,7 +65,15 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(inventario);
         }
 
+        public async Task<IActionResult> Estado(int id)
+        {
+            var inventario = await _sistemaContext.Inventarios.FirstOrDefaultAsync(i => i.Id == id);
+            inventario.Estado = !inventario.Estado;
+            await _sistemaContext.SaveChangesAsync();
+            CrearAlerta("success", "Se actualizó el estado correctamente");
 
+            return RedirectToAction("Listar");
+        }
 
         public void CrearAlerta(string alertType, string alertMessage)
         {
