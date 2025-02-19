@@ -53,7 +53,7 @@
                             <ul class="dropdown-menu">
                                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                                 {
-                                    <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
+                                    <li><a class="dropdown-item">@User.Identity.Name</a></li>
                                     <li><a class="dropdown-item" asp-action="Logout" asp-controller="Seguridad">Cerrar sesión</a></li>
                                 } else
                                 {
