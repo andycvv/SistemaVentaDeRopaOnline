@@ -3,62 +3,54 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models;
-using System.Runtime.CompilerServices;
 using MercadoPago.Config;
 using MercadoPago.Client.Preference;
 using MercadoPago.Resource.Preference;
+using System.Net;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
     public class VentaController : Controller
     {
-        private readonly SistemaContext context;
+        private readonly SistemaContext _context;
         private readonly UserManager<Usuario> _userManager;
-        public VentaController(SistemaContext context,UserManager<Usuario> userManager)
+        private readonly string _mercadoPagoAccessToken = "APP_USR-3117456896561429-021809-e122fff0dc26478fbe16ef17906d9342-2275386132";
+
+        public VentaController(SistemaContext context, UserManager<Usuario> userManager)
         {
-            this.context = context;
+            _context = context;
             _userManager = userManager;
-            MercadoPagoConfig.AccessToken = "APP_USR-3117456896561429-021809-e122fff0dc26478fbe16ef17906d9342-2275386132";
+            MercadoPagoConfig.AccessToken = _mercadoPagoAccessToken;
         }
+
         [HttpGet]
-        public async Task<IActionResult> Crear ()
+        public async Task<IActionResult> Crear()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Index", "Producto");
-            }
+            if (user == null) return RedirectToAction("Index", "Producto");
 
-            var pedido = await ObtenerPedidoAsync(userId: user.Id);
+            var pedido = await ObtenerPedidoAsync(null, user.Id);
+            if (pedido == null) return RedirectToAction("Index", "Producto");
 
-            if (pedido == null)
-            {
-                return RedirectToAction("Index", "Producto");
-            }
-
-            Venta venta = new Venta()
+            var venta = new Venta
             {
                 Fecha = DateTime.Now,
                 PedidoId = pedido.Id,
                 Pedido = pedido,
                 MetodoPago = "Tarjeta"
             };
+
             return View(venta);
         }
-        [HttpPost]
-        public async Task<IActionResult> Crear(Venta venta)
-        {
-            var pedido = await ObtenerPedidoAsync(pedidoId: venta.PedidoId);
-            if (pedido == null)
-            {
-                return RedirectToAction("Index", "Producto");
-            }
-            venta.Pedido = pedido;
 
-            if (!ModelState.IsValid)
-            {
-                return View(venta);
-            }
+        [HttpPost]
+        public async Task<IActionResult> Crear(Venta venta, string pago)
+        {
+            var pedido = await ObtenerPedidoAsync(venta.PedidoId, null);
+            if (pedido == null) return RedirectToAction("Index", "Producto");
+
+            venta.Pedido = pedido;
+            if (!ModelState.IsValid) return View(venta);
 
             var (existeStock, mensajeError) = await ExisteStock(pedido);
             if (!existeStock)
@@ -67,9 +59,31 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 return View(venta);
             }
 
-            string urlPago = await CrearPago(pedido, venta.Nombre, venta.Apellido, venta.Telefono, venta.TipoComprobante, venta.Correo, venta.Direccion, venta.DNI);
-            return Redirect(urlPago);
+            return pago == "normal" ? await ProcesarPagoNormal(venta, pedido) : Redirect(await CrearPago(pedido, venta));
         }
+        
+        [HttpGet]
+        private async Task<IActionResult> ProcesarPagoNormal(Venta venta, Pedido pedido)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await ActualizarStock(pedido);
+                await RegistrarVenta(venta);
+                Console.WriteLine("HOLAAAAAAAAAAAAAA");
+                await AsignarVentaAlPedido(venta);
+                await transaction.CommitAsync();
+
+                CrearAlerta("success", "Pago exitoso y venta registrada correctamente.");
+            }
+            catch
+            {
+                CrearAlerta("error", "Error al registrar la venta.");
+                await transaction.RollbackAsync();
+            }
+            return RedirectToAction("Index", "Producto");
+        }
+
         [HttpGet]
         public async Task<IActionResult> PagoExitoso(string collection_id, string payment_id, string status, string payment_type, int pedidoId, string nombre, string apellido, string telefono, string tipocomprobante, string correo, string direccion, string dni)
         {
@@ -79,60 +93,49 @@ namespace SistemaVentaDeRopaOnline.Controllers
                 return RedirectToAction("Index", "Producto");
             }
 
-            var pedido = await ObtenerPedidoAsync(pedidoId: pedidoId);
-            if (pedido == null)
-            {
-                CrearAlerta("error", "No se encontró el pedido.");
-                return RedirectToAction("Index", "Producto");
-            }
+            var pedido = await ObtenerPedidoAsync(pedidoId);
+            if (pedido == null) return RedirectToAction("Index", "Producto");
 
             var (existeStock, mensajeError) = await ExisteStock(pedido);
-            if (!existeStock)
+            if (!existeStock) return RedirectToAction("Index", "Producto");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                CrearAlerta("error", mensajeError!);
-                return RedirectToAction("Index", "Producto");
-            }
+                var venta = new Venta
+                {
+                    Fecha = DateTime.Now,
+                    PedidoId = pedido.Id,
+                    Pedido = pedido,
+                    MetodoPago = "Tarjeta",
+                    Nombre = nombre,
+                    Apellido = apellido,
+                    Telefono = telefono,
+                    TipoComprobante = tipocomprobante,
+                    Correo = correo,
+                    Direccion = direccion,
+                    DNI = dni
+                };
 
-            using (var transaction = await context.Database.BeginTransactionAsync())
+                await ActualizarStock(pedido);
+                await RegistrarVenta(venta);
+                await AsignarVentaAlPedido(venta);
+                await transaction.CommitAsync();
+
+                CrearAlerta("success", "Pago exitoso y venta registrada correctamente.");
+            }
+            catch
             {
-                try
-                {
-                    Venta venta = new Venta()
-                    {
-                        Fecha = DateTime.Now,
-                        PedidoId = pedido.Id,
-                        Pedido = pedido,
-                        MetodoPago = "Tarjeta",
-                        Nombre = nombre,
-                        Apellido = apellido,
-                        Telefono = telefono,
-                        TipoComprobante = tipocomprobante,
-                        Correo = correo,
-                        Direccion = direccion,
-                        DNI = dni
-                    };
-
-                    await ActualizarStock(pedido);
-                    await RegistrarVenta(venta);
-                    await AsignarVentaAlPedido(venta);
-
-                    await transaction.CommitAsync();
-
-                    CrearAlerta("success", "Pago exitoso y venta registrada correctamente.");
-                }
-                catch
-                {
-                    CrearAlerta("error", "Error al registrar la venta.");
-                }
+                CrearAlerta("error", "Error al registrar la venta.");
+                await transaction.RollbackAsync();
             }
-
             ViewBag.CollectionId = collection_id;
             ViewBag.PaymentId = payment_id;
             ViewBag.Status = status;
             ViewBag.PaymentType = payment_type;
-
             return View();
         }
+
         [HttpGet]
         public IActionResult PagoFallido()
         {
@@ -140,8 +143,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return RedirectToAction("Index", "Producto");
         }
 
-        // metodos complementarios
-        private async Task<string> CrearPago(Pedido pedido, string nombre, string apellido, string telefono, string tipocomprobante, string correo, string direccion, string dni)
+        private async Task<string> CrearPago(Pedido pedido, Venta venta)
         {
             var preferenceRequest = new PreferenceRequest
             {
@@ -152,88 +154,77 @@ namespace SistemaVentaDeRopaOnline.Controllers
                     CurrencyId = "PEN",
                     UnitPrice = Convert.ToDecimal(d.Inventario.Producto.Precio)
                 }).ToList(),
-                Payer = new PreferencePayerRequest
-                {
-                    Email = "TESTUSER837991704@testuser.com"
-                },
+                Payer = new PreferencePayerRequest { Email = "TESTUSER837991704@testuser.com" },
                 BackUrls = new PreferenceBackUrlsRequest
                 {
-                    Success = "https://localhost:7067/Venta/PagoExitoso?pedidoId=" + pedido.Id +"&nombre=" + nombre +"&apellido=" + apellido + "&telefono=" + telefono + "&tipocomprobante=" + tipocomprobante + "&correo=" + correo + "&direccion=" + direccion + "&dni=" + dni,
+                    Success = $"https://localhost:7067/Venta/PagoExitoso?pedidoId={pedido.Id}&nombre={venta.Nombre}&apellido={venta.Apellido}&telefono={venta.Telefono}&tipocomprobante={venta.TipoComprobante}&correo={venta.Correo}&direccion={venta.Direccion}&dni={venta.DNI}",
                     Failure = "https://localhost:7067/Venta/PagoFallido",
-                    Pending = "https://localhost:7067//Venta/PagoPendiente"
+                    Pending = "https://localhost:7067/Venta/PagoPendiente"
                 },
                 AutoReturn = "approved"
             };
 
             var client = new PreferenceClient();
-            Preference preference = await client.CreateAsync(preferenceRequest);
-
+            var preference = await client.CreateAsync(preferenceRequest);
             return preference.InitPoint;
         }
+
         private async Task<Pedido?> ObtenerPedidoAsync(int? pedidoId = null, string? userId = null)
         {
-            var consulta = context.Pedidos
+            var consulta = _context.Pedidos
                 .Include(p => p.DetallePedidos)
                     .ThenInclude(d => d.Inventario)
-                        .ThenInclude(i => i.Producto)
-                            .ThenInclude(p => p.ImagenProductos)
+                    .ThenInclude(i => i.Producto)
+                    .ThenInclude(p => p.ImagenProductos)
                 .Include(p => p.DetallePedidos)
                     .ThenInclude(d => d.Inventario)
-                        .ThenInclude(i => i.Talla)
+                    .ThenInclude(i => i.Talla)
                 .Include(p => p.DetallePedidos)
                     .ThenInclude(d => d.Inventario)
-                        .ThenInclude(i => i.Color)
+                    .ThenInclude(i => i.Color)
                 .Include(p => p.Usuario)
                 .AsQueryable();
 
-            if (pedidoId != null)
-            {
-                return await consulta.FirstOrDefaultAsync(p => p.Id == pedidoId);
-            }
-
-            if (userId != null)
-            {
-                return await consulta.FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Estado == "Pendiente");
-            }
-
-            return null;
+            return pedidoId.HasValue 
+                ? await consulta.FirstOrDefaultAsync(p => p.Id == pedidoId) 
+                : await consulta.FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Estado == "Pendiente");
         }
-        private async Task<(bool existeStock, string? mensajeError)> ExisteStock(Pedido pedido)
+
+        private async Task<(bool, string?)> ExisteStock(Pedido pedido)
         {
             foreach (var detalle in pedido.DetallePedidos)
             {
                 if (detalle.Cantidad > detalle.Inventario.Stock)
                 {
-                    string mensajeError = $"No hay suficiente stock para el producto {detalle.Inventario.Producto.Nombre}. " +
-                      $"Stock disponible: {detalle.Inventario.Stock}, solicitado: {detalle.Cantidad}.";
-                    return (false, mensajeError);
+                    return (false, $"No hay suficiente stock para {detalle.Inventario.Producto.Nombre}. Disponible: {detalle.Inventario.Stock}, solicitado: {detalle.Cantidad}.");
                 }
             }
             return (true, null);
         }
-        private async Task ActualizarStock (Pedido pedido)
+
+        private async Task ActualizarStock(Pedido pedido)
         {
-            foreach (var detalle in pedido.DetallePedidos)
-            {
-                detalle.Inventario.Stock -= detalle.Cantidad;
-            }
-            await context.SaveChangesAsync();
+            foreach (var detalle in pedido.DetallePedidos) detalle.Inventario.Stock -= detalle.Cantidad;
+            await _context.SaveChangesAsync();
         }
-        private async Task RegistrarVenta (Venta venta)
+
+        private async Task RegistrarVenta(Venta venta)
         {
-            context.Ventas.Add(venta);
-            await context.SaveChangesAsync();
+            _context.Ventas.Add(venta);
+            await _context.SaveChangesAsync();
         }
+
         private async Task AsignarVentaAlPedido(Venta venta)
         {
             venta.Pedido.VentaId = venta.Id;
             venta.Pedido.Estado = "Pagado";
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
-        public void CrearAlerta(string alertType, string alertMessage)
+
+        private void CrearAlerta(string tipo, string mensaje)
         {
-            TempData["AlertMessage"] = alertMessage;
-            TempData["AlertType"] = alertType;
+            TempData["AlertType"] = tipo;
+            TempData["AlertMessage"] = mensaje;
         }
     }
 }
