@@ -23,7 +23,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             _roleManager = roleManager;
         }
 
-
+        
         [HttpGet]
         public IActionResult Registrar()
         {

@@ -14,17 +14,28 @@ builder.Services.AddIdentity<Usuario, IdentityRole>()
     .AddEntityFrameworkStores<SistemaContext>()
     .AddDefaultTokenProviders();
 
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = true;  // Requiere al menos un número
-    options.Password.RequiredLength = 6;   // Longitud mínima
-    options.Password.RequireNonAlphanumeric = false; // Requiere un carácter especial
-    options.Password.RequireUppercase = true; // Requiere una mayúscula
-    options.Password.RequireLowercase = true; // Requiere una minúscula
-    options.Password.RequiredUniqueChars = 1; // Número mínimo de caracteres únicos
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequiredUniqueChars = 1;
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var userManager = services.GetRequiredService<UserManager<Usuario>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    await DbInitializer.SeedData(userManager, roleManager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
