@@ -153,7 +153,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
                     CurrencyId = "PEN",
                     UnitPrice = Convert.ToDecimal(d.Inventario.Producto.Precio)
                 }).ToList(),
-                Payer = new PreferencePayerRequest { Email = "TESTUSER837991704@testuser.com" },
+                Payer = new PreferencePayerRequest { Email = pedido.Usuario.Email },
                 BackUrls = new PreferenceBackUrlsRequest
                 {
                     Success = $"https://localhost:7067/Venta/PagoExitoso?pedidoId={pedido.Id}&nombre={venta.Nombre}&apellido={venta.Apellido}&telefono={venta.Telefono}&tipocomprobante={venta.TipoComprobante}&correo={venta.Correo}&direccion={venta.Direccion}&dni={venta.DNI}",
