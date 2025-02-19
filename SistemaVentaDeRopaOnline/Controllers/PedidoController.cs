@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
@@ -16,6 +17,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -46,6 +48,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(pedido);
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpPost]
         public async Task<IActionResult> Guardar(int productoId, double precio, int ideTal, int ideCol)
         {
@@ -108,6 +111,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         public async Task<IActionResult> SumarCantidad(int id)
         {
@@ -127,6 +131,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         public async Task<IActionResult> RestarCantidad(int id)
         {

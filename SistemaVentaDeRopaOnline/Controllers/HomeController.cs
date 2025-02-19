@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
@@ -6,6 +7,7 @@ using SistemaVentaDeRopaOnline.Models;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class InventarioController : Controller
     {
         private readonly SistemaContext _sistemaContext;

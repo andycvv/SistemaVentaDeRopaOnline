@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class TallaController : Controller
     {
         private readonly SistemaContext _sistemaContext;
