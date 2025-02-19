@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SistemaVentaDeRopaOnline.Models;
 using SistemaVentaDeRopaOnline.Models.ViewModels;
@@ -23,12 +24,17 @@ namespace SistemaVentaDeRopaOnline.Controllers
             _roleManager = roleManager;
         }
 
-        
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Registrar()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Registrar(RegistroViewModel model)
         {
@@ -53,11 +59,18 @@ namespace SistemaVentaDeRopaOnline.Controllers
             }
             return View(model);
         }
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Ingresar()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Ingresar(LoginViewModel model)
         {
@@ -73,7 +86,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
                     if(await _userManager.IsInRoleAsync(usuario, "Administrador"))
                     {
-                        return RedirectToAction("Listar", "Producto");
+                        return RedirectToAction("Index", "Dashboard");
                     }
 
                     return RedirectToAction("Index", "Producto");

@@ -7,6 +7,7 @@ using MercadoPago.Config;
 using MercadoPago.Client.Preference;
 using MercadoPago.Resource.Preference;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
@@ -22,6 +23,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             MercadoPagoConfig.AccessToken = configuration["MercadoPago:AccessToken"];
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         public async Task<IActionResult> Crear()
         {
@@ -42,6 +44,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View(venta);
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpPost]
         public async Task<IActionResult> Crear(Venta venta, string pago)
         {
@@ -60,7 +63,8 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
             return pago == "normal" ? await ProcesarPagoNormal(venta, pedido) : Redirect(await CrearPago(pedido, venta));
         }
-        
+
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         private async Task<IActionResult> ProcesarPagoNormal(Venta venta, Pedido pedido)
         {
@@ -83,6 +87,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return RedirectToAction("Index", "Producto");
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         public async Task<IActionResult> PagoExitoso(string collection_id, string payment_id, string status, string payment_type, int pedidoId, string nombre, string apellido, string telefono, string tipocomprobante, string correo, string direccion, string dni)
         {
@@ -135,6 +140,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Cliente")]
         [HttpGet]
         public IActionResult PagoFallido()
         {

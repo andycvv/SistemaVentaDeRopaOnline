@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models.ViewModels;
 using SistemaVentaDeRopaOnline.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class ImagenController : Controller
     {
         private readonly SistemaContext _sistemaContext;

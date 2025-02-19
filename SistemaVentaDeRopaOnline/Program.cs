@@ -13,7 +13,12 @@ builder.Services.AddDbContext<SistemaContext>(
 builder.Services.AddIdentity<Usuario, IdentityRole>()
     .AddEntityFrameworkStores<SistemaContext>()
     .AddDefaultTokenProviders();
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Seguridad/Ingresar";
+    options.AccessDeniedPath = "/Seguridad/AccesoDenegado";
+    options.SlidingExpiration = true;
+});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

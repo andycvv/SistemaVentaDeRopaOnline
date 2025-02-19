@@ -2,7 +2,7 @@
 {
     public class DashboardViewModel
     {
-        public int TotalClientes { get; set; }
+        public int TotalUsuarios { get; set; }
         public int TotalVentas { get; set; }
         public int TotalProductos { get; set; }
         public int TotalPedidos { get; set; }

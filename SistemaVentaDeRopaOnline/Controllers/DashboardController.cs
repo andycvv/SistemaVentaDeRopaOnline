@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaVentaDeRopaOnline.Data;
 using SistemaVentaDeRopaOnline.Models.ViewModels;
 
 namespace SistemaVentaDeRopaOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class DashboardController : Controller
     {
         private readonly SistemaContext _context;
@@ -17,7 +19,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             var dashboardData = new DashboardViewModel()
             {
-                TotalClientes = await _context.Usuarios.CountAsync(),
+                TotalUsuarios = await _context.Usuarios.CountAsync(),
                 TotalVentas = await _context.Ventas.CountAsync(),
                 TotalProductos = await _context.Productos.CountAsync(),
                 TotalPedidos = await _context.Pedidos.CountAsync(),
