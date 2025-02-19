@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+}
+
+
+<div class="container text-center">
+    <div class="row col-12">
+        <img class="mx-auto w-auto" src="https://http2.mlstatic.com/frontend-assets/social-payment-receipt-front/mp-logo.png" />
+    </div>
+    <h2 class="fw-bold fs-3 my-4">Comprobante de pago</h2>
+    <hr />
+    <p class="fs-5">Fecha: @(DateTime.Now.ToShortDateString())</p>
+    <hr/>
+    <h2 class="mb-3">¡Pago Exitoso!</h2>
+    <p><strong>ID de la Transacción:</strong> @ViewBag.PaymentId</p>
+    <p><strong>Estado del Pago:</strong> @ViewBag.Status</p>
+    <p><strong>Tipo de Pago:</strong> @ViewBag.PaymentType</p>
+    <p><strong>ID de la Colección:</strong> @ViewBag.CollectionId</p>
+
+    <a asp-action="Index" asp-controller="Producto" class="btn btn-info">Volver al inicio</a>
+</div>
+

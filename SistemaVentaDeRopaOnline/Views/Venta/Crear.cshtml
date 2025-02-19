@@ -80,11 +80,56 @@
                 <input hidden asp-for="MetodoPago" value="@Model.MetodoPago" type="text" class="form-control">
                 <input hidden asp-for="PedidoId" value="@Model.PedidoId" type="number" class="form-control">
 
+                <div class="row col-12">
+                    <h3 class="fs-5 fw-bold mb-5">MÉTODO DE PAGO</h3>
+                    <div class="mb-3">
+                        <input type="radio" id="pagoMercadoPago" name="MetodoPago" value="MercadoPago" checked>
+                        <label for="pagoMercadoPago">Pagar con MercadoPago</label>
+                    </div>
+                    <div class="mb-3">
+                        <input type="radio" id="pagoTarjeta" name="MetodoPago" value="Tarjeta">
+                        <label for="pagoTarjeta">Pagar con tarjeta</label>
+                    </div>
+                </div>
+                <hr />
+
+                <div id="formTarjeta" class="d-none">
+                    <h3 class="fs-5 fw-bold mb-3">Información de la Tarjeta</h3>
+                    <div class="mb-3">
+                        <label for="NumeroTarjeta" class="form-label">Número de tarjeta</label>
+                        <input type="text" id="NumeroTarjeta" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="mb-3">
+                        <label for="FechaExpiracion" class="form-label">Fecha de expiración</label>
+                        <input type="text" id="FechaExpiracion" class="form-control" placeholder="MM/YY">
+                    </div>
+                    <div class="mb-3">
+                        <label for="CVV" class="form-label">CVV</label>
+                        <input type="text" id="CVV" class="form-control" placeholder="XXX">
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <div class="col-12">
-                        <button class="d-flex text-decoration-none col-12 bg-black text-white justify-content-center align-items-center fw-medium py-3 mb-4"
-                                type="submit">
+                        <button 
+                            class="d-flex d-none text-decoration-none col-12 bg-black text-white justify-content-center align-items-center fw-medium py-3 mb-4"
+                            type="submit"
+                            id="btn-pago"
+                            name="pago"
+                            value="normal"
+                        >
                             PAGAR
+                        </button>
+                    </div>
+                    <div class="col-12">
+                        <button 
+                            class="d-flex text-decoration-none col-12 bg-warning text-black justify-content-center align-items-center fw-medium py-3 mb-4"
+                            type="submit"
+                            id="btn-mercadopago"
+                            name="pago"
+                            value="mercadopago"
+                        >
+                            PAGAR CON MERCADO PAGO
                         </button>
                     </div>
                 </div>
@@ -126,3 +171,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const pagoMercadoPago = document.getElementById("pagoMercadoPago");
+        const pagoTarjeta = document.getElementById("pagoTarjeta");
+        const formTarjeta = document.getElementById("formTarjeta");
+        const btnPago = document.getElementById("btn-pago");
+        const btnMercadoPago = document.getElementById("btn-mercadopago");
+
+        pagoMercadoPago.addEventListener("change", function() {
+            if (pagoMercadoPago.checked) {
+                formTarjeta.classList.add("d-none");
+                btnPago.classList.add("d-none");
+                btnMercadoPago.classList.remove("d-none");
+            }
+        });
+
+        pagoTarjeta.addEventListener("change", function() {
+            if (pagoTarjeta.checked) {
+                formTarjeta.classList.remove("d-none");
+                btnPago.classList.remove("d-none");
+                btnMercadoPago.classList.add("d-none");
+            }
+        });
+    });
+</script>
