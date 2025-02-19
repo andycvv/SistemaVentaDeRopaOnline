@@ -18,8 +18,9 @@ namespace SistemaVentaDeRopaOnline.Controllers
         public async Task<IActionResult> Index(string? genero)
         {
             var productos = await GetAllProducts(genero);
+            var productosFiltrados = productos.Where(p => p.Estado && p.Inventarios.Count() > 0).ToList();
             ViewBag.genero = genero;
-            return View(productos);
+            return View(productosFiltrados);
         }
         public async Task<IActionResult> Detalle(int id, int? ideTal)
         {
@@ -35,6 +36,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             var query = context.Productos
                     .Include(p => p.ImagenProductos)
                     .Include(p => p.Categoria)
+                    .Include(p => p.Inventarios)
                     .AsQueryable();
 
             if (!genero.IsNullOrEmpty())
@@ -48,9 +50,9 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             var query = context.Productos
                 .Include(p => p.ImagenProductos)
-                .Include(p => p.Inventarios)
+                .Include(p => p.Inventarios.Where(i => i.Estado))
                     .ThenInclude(i => i.Talla)
-                .Include(p => p.Inventarios)
+                .Include(p => p.Inventarios.Where(i => i.Estado))
                     .ThenInclude(i => i.Color)
                 .Where(p => p.Id == id)
                 .AsQueryable();
@@ -58,7 +60,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
             if (ideTal.HasValue)
             {
                 query = query
-                    .Where(p => p.Inventarios.Any(i => i.TallaId == ideTal.Value));
+                    .Where(p => p.Inventarios.Any(i => i.TallaId == ideTal.Value && i.Estado));
             }
 
             return await query.FirstOrDefaultAsync();
