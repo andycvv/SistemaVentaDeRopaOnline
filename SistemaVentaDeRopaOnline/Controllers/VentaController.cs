@@ -14,13 +14,12 @@ namespace SistemaVentaDeRopaOnline.Controllers
     {
         private readonly SistemaContext _context;
         private readonly UserManager<Usuario> _userManager;
-        private readonly string _mercadoPagoAccessToken = "APP_USR-3117456896561429-021809-e122fff0dc26478fbe16ef17906d9342-2275386132";
 
-        public VentaController(SistemaContext context, UserManager<Usuario> userManager)
+        public VentaController(SistemaContext context, UserManager<Usuario> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
-            MercadoPagoConfig.AccessToken = _mercadoPagoAccessToken;
+            MercadoPagoConfig.AccessToken = configuration["MercadoPago:AccessToken"];
         }
 
         [HttpGet]
