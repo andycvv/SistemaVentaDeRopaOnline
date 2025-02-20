@@ -19,6 +19,8 @@ public class DbInitializer
 
         await CreateUserIfNotExists(userManager, "admin1", "admin1@example.com", "Admin123!", "Administrador");
         await CreateUserIfNotExists(userManager, "admin2", "admin2@example.com", "Admin123!", "Administrador");
+        await CreateUserIfNotExists(userManager, "yadira", "yadira@gmail.com", "123Yadira", "Administrador");
+        await CreateUserIfNotExists(userManager, "jose", "jose@gmail.com", "123Jose", "Administrador");
 
         await CreateUserIfNotExists(userManager, "cliente1", "cliente@example.com", "Cliente123!", "Cliente");
     }

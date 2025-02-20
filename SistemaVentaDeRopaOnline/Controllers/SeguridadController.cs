@@ -46,6 +46,14 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             if (ModelState.IsValid)
             {
+                var usuarioExistente = await _userManager.FindByEmailAsync(model.Correo);
+
+                if (usuarioExistente != null)
+                {
+                    CrearAlerta("error", "El correo ya está registrado. Intente con otro.");
+                    return View(model);
+                }
+
                 var usuario = new Usuario()
                 {
                     UserName = model.Correo,
