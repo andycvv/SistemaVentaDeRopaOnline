@@ -17,19 +17,20 @@ public class DbInitializer
             }
         }
 
-        await CreateUserIfNotExists(userManager, "admin1@example.com", "Admin123!", "Administrador");
-        await CreateUserIfNotExists(userManager, "admin2@example.com", "Admin123!", "Administrador");
+        await CreateUserIfNotExists(userManager, "admin1", "admin1@example.com", "Admin123!", "Administrador");
+        await CreateUserIfNotExists(userManager, "admin2", "admin2@example.com", "Admin123!", "Administrador");
 
-        await CreateUserIfNotExists(userManager, "cliente@example.com", "Cliente123!", "Cliente");
+        await CreateUserIfNotExists(userManager, "cliente1", "cliente@example.com", "Cliente123!", "Cliente");
     }
 
-    private static async Task CreateUserIfNotExists(UserManager<Usuario> userManager, string email, string password, string role)
+    private static async Task CreateUserIfNotExists(UserManager<Usuario> userManager, string name, string email, string password, string role)
     {
         if (await userManager.FindByEmailAsync(email) == null)
         {
             var user = new Usuario
             {
                 UserName = email,
+                Nombre = name,
                 Email = email,
                 EmailConfirmed = true
             };
