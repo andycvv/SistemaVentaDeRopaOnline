@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["title"] = "Listar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+<div class="page-header">
+    <div class="page-title">
+        <h4>Lista de Roles</h4>
+        <h6>Gestiona los roles</h6>
+    </div>
+    <div class="page-btn">
+        <a asp-action="Crear" asp-controller="Rol" class="btn btn-added"><img src="~/assets/img/icons/plus.svg" alt="img" class="me-1">Agregar nuevo rol</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-input">
+                    <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table  datanew">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rol in Model)
+                    {
+                        <tr>
+                            <td>@rol.Name</td>
+                            <td>
+                                <a class="me-3" asp-action="Editar" asp-route-id="@rol.Id">
+                                    <img src="~/assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a class="confirm-text" onclick="showConfirmDeleteAlert('Rol', 'Eliminar', '@rol.Id')">
+                                    <img src="~/assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

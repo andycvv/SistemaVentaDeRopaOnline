@@ -1,0 +1,54 @@
+﻿@model IEnumerable<SistemaVentaDeRopaOnline.Models.Usuario>
+@{
+    ViewData["title"] = "Listar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+<div class="page-header">
+    <div class="page-title">
+        <h4>Lista de Usuarios</h4>
+        <h6>Gestiona los usuarios</h6>
+    </div>
+    <div class="page-btn">
+        <a asp-action="Crear" asp-controller="Usuario" class="btn btn-added"><img src="~/assets/img/icons/plus.svg" alt="img" class="me-1">Agregar nuevo usuario</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-input">
+                    <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table  datanew">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model)
+                    {
+                        <tr>
+                            <td>@usuario.Nombre</td>
+                            <td>@usuario.Email</td>
+                            <td>
+                                <a asp-action="AsignarRoles" asp-controller="Usuario" asp-route-idUsuario="@usuario.Id" style="border: 2px solid #637381; border-radius: 5px; padding: 13px 7px 7px 7px; background-color: white; font-size: 14px; font-weight: 700; color: #637381" onmouseover="this.style.backgroundColor='#637381'; this.style.color='white'; this.querySelector('i').style.color='white';" onmouseout="this.style.backgroundColor='white'; this.style.color='#637381'; this.querySelector('i').style.color='#637381';">
+                                    <i class="bi bi-person-badge-fill" style="font-size: 21px; color: #637381"></i> Roles
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

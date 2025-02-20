@@ -26,11 +26,17 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Registrar()
+        public async Task<IActionResult> Registrar()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Dashboard");
+                var usuario = await _userManager.GetUserAsync(User);
+
+                if (await _userManager.IsInRoleAsync(usuario, "Administrador"))
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                return RedirectToAction("Index", "Producto");
             }
             return View();
         }
@@ -40,6 +46,14 @@ namespace SistemaVentaDeRopaOnline.Controllers
         {
             if (ModelState.IsValid)
             {
+                var usuarioExistente = await _userManager.FindByEmailAsync(model.Correo);
+
+                if (usuarioExistente != null)
+                {
+                    CrearAlerta("error", "El correo ya está registrado. Intente con otro.");
+                    return View(model);
+                }
+
                 var usuario = new Usuario()
                 {
                     UserName = model.Correo,
@@ -62,11 +76,17 @@ namespace SistemaVentaDeRopaOnline.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Ingresar()
+        public async Task<IActionResult> Ingresar()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Dashboard");
+                var usuario = await _userManager.GetUserAsync(User);
+
+                if (await _userManager.IsInRoleAsync(usuario, "Administrador"))
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                return RedirectToAction("Index", "Producto");
             }
             return View();
         }
@@ -101,6 +121,25 @@ namespace SistemaVentaDeRopaOnline.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Ingresar");
         }
+
+        [Authorize]
+        public async Task<IActionResult> AccesoDenegadoDinamico()
+        {
+            var usuario = await _userManager.GetUserAsync(User);
+
+            if (usuario == null)
+            {
+                return RedirectToAction("Ingresar", "Seguridad");
+            }
+
+            if (await _userManager.IsInRoleAsync(usuario, "Administrador"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            return RedirectToAction("Index", "Producto");
+        }
+
 
         public void CrearAlerta(string alertType, string alertMessage) 
         {

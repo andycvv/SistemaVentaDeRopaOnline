@@ -16,7 +16,7 @@ builder.Services.AddIdentity<Usuario, IdentityRole>()
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Seguridad/Ingresar";
-    options.AccessDeniedPath = "/Seguridad/AccesoDenegado";
+    options.AccessDeniedPath = "/Seguridad/AccesoDenegadoDinamico";
     options.SlidingExpiration = true;
 });
 
