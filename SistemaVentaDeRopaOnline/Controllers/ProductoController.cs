@@ -19,7 +19,7 @@ namespace SistemaVentaDeRopaOnline.Controllers
         public async Task<IActionResult> Index(string? genero)
         {
             var productos = await GetAllProducts(genero);
-            var productosFiltrados = productos.Where(p => p.Estado && p.Inventarios.Count() > 0).ToList();
+            var productosFiltrados = productos.Where(p => p.Estado && p.Inventarios.Count() > 0 && p.Inventarios.Any(i => i.Estado)).ToList();
             ViewBag.genero = genero;
             return View(productosFiltrados);
         }
